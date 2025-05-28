@@ -1,23 +1,32 @@
 from env.gym_race_env import PitStopEnv
+from rl.q_learning_agent import QAgent
 
-def test_environment():
+def train_q_learning(episodes=500):
     env = PitStopEnv()
-    obs = env.reset()
-    done = False
-    total_reward = 0
-    step = 0
+    agent = QAgent(env)
+    rewards = []
 
-    print("🏁 Starting race simulation...")
+    for episode in range(episodes):
+        obs = env.reset()
+        state = agent.discretize(obs)
+        total_reward = 0
+        done = False
 
-    while not done:
-        action = env.action_space.sample()  # Random: 0 = stay out, 1 = pit
-        obs, reward, done, _ = env.step(action)
-        total_reward += reward
-        print(f"Lap {int(obs[0])} | Action: {'PIT' if action else 'STAY OUT'} | "
-              f"Tire Wear: {obs[1]:.2f} | Traffic: {obs[2]:.2f} | Reward: {reward:.2f}")
-        step += 1
+        while not done:
+            action = agent.choose_action(state)
+            next_obs, reward, done, _ = env.step(action)
+            next_state = agent.discretize(next_obs)
+            agent.update_q(state, action, reward, next_state)
+            state = next_state
+            total_reward += reward
 
-    print(f"\n✅ Simulation complete in {step} laps. Total reward: {total_reward:.2f}")
+        agent.decay_epsilon()
+        rewards.append(total_reward)
+        if (episode + 1) % 50 == 0:
+            print(f"Episode {episode + 1}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}")
+
+    return rewards
 
 if __name__ == "__main__":
-    test_environment()
+    train_q_learning()
+

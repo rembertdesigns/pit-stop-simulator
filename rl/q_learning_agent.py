@@ -1,18 +1,34 @@
 import numpy as np
 
 class QAgent:
-    def __init__(self, state_size, action_size):
-        self.q_table = np.zeros((state_size, action_size))
-        self.lr = 0.1
-        self.gamma = 0.95
-        self.epsilon = 1.0
-        self.epsilon_decay = 0.995
+    def __init__(self, env, buckets=(58, 10, 10), alpha=0.1, gamma=0.95, epsilon=1.0, epsilon_decay=0.995):
+        self.env = env
+        self.buckets = buckets  # Discretization bins: (laps, tire_wear, traffic)
+        self.q_table = np.zeros(self.buckets + (env.action_space.n,))
+        self.alpha = alpha
+        self.gamma = gamma
+        self.epsilon = epsilon
+        self.epsilon_decay = epsilon_decay
+        self.min_epsilon = 0.01
+
+    def discretize(self, obs):
+        lap, tire, traffic = obs
+        lap_bin = min(int(lap), self.buckets[0] - 1)
+        tire_bin = min(int(tire // 10), self.buckets[1] - 1)
+        traffic_bin = min(int(traffic * 10), self.buckets[2] - 1)
+        return (lap_bin, tire_bin, traffic_bin)
 
     def choose_action(self, state):
-        if np.random.rand() < self.epsilon:
-            return np.random.randint(2)  # pit or not
+        if np.random.random() < self.epsilon:
+            return self.env.action_space.sample()
         return np.argmax(self.q_table[state])
 
     def update_q(self, state, action, reward, next_state):
-        best_next = np.max(self.q_table[next_state])
-        self.q_table[state, action] += self.lr * (reward + self.gamma * best_next - self.q_table[state, action])
+        best_future_q = np.max(self.q_table[next_state])
+        current_q = self.q_table[state + (action,)]
+        new_q = current_q + self.alpha * (reward + self.gamma * best_future_q - current_q)
+        self.q_table[state + (action,)] = new_q
+
+    def decay_epsilon(self):
+        self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
+
