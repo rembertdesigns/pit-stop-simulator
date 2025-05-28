@@ -12,16 +12,29 @@ Teach an agent to decide **when to pit** during a race to minimize lap times and
 
 ## 🧱 Project Structure
 ```bash
-PIT-STOP-SIMULATOR/
-├── env/ # Custom Gym-compatible environment
-│ └── gym_race_env.py
-├── rl/ # Reinforcement learning agents
-│ └── q_learning_agent.py
-├── data/ # Placeholder for track/tire data
-├── visualizations/ # Future visual outputs (heatmaps, charts)
-├── main.py # Entry point: trains and visualizes agent
-├── requirements.txt # Dependencies
-└── README.md
+pit-stop-simulator/
+│
+├── main.py                      # Q-learning training loop + pit heatmap
+├── ppo_train.py                 # Train PPO agent using Stable-Baselines3
+├── ppo_eval.py                  # Evaluate PPO agent and track pit stops
+├── compare_strategies.py        # Visual side-by-side comparison of pit strategies
+│
+├── env/
+│   └── gym_race_env.py          # Custom OpenAI Gymnasium race simulation environment
+│
+├── rl/
+│   └── q_learning_agent.py      # Q-learning agent logic
+│
+├── models/
+│   └── ppo_pit_stop.zip         # Saved PPO model
+│
+├── data/
+│   ├── q_learning_pit_decisions.npy   # Pit stop logs from Q-learning
+│   └── ppo_pit_decisions.npy          # Pit stop logs from PPO
+│
+├── requirements.txt             # Python package dependencies
+└── README.md                    # Project overview and setup instructions
+
 ```
 
 
