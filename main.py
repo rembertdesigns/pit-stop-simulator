@@ -1,5 +1,6 @@
 from env.gym_race_env import PitStopEnv
 from rl.q_learning_agent import QAgent
+import matplotlib.pyplot as plt
 
 def train_q_learning(episodes=500):
     env = PitStopEnv()
@@ -22,11 +23,24 @@ def train_q_learning(episodes=500):
 
         agent.decay_epsilon()
         rewards.append(total_reward)
+
         if (episode + 1) % 50 == 0:
             print(f"Episode {episode + 1}: Total Reward = {total_reward:.2f}, Epsilon = {agent.epsilon:.3f}")
 
     return rewards
 
+def plot_rewards(rewards):
+    plt.figure(figsize=(10, 5))
+    plt.plot(rewards)
+    plt.xlabel("Episode")
+    plt.ylabel("Total Reward")
+    plt.title("Q-learning Training Progress")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
 if __name__ == "__main__":
-    train_q_learning()
+    rewards = train_q_learning()
+    plot_rewards(rewards)
+
 
