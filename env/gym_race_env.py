@@ -36,13 +36,20 @@ class PitStopEnv(gym.Env):
         if action == 1:  # pit
             self.tire_wear = 0.0
             lap_time = 30  # pit cost
+            reward = -lap_time
+            reward += 5  # small bonus to encourage pitting
         else:  # stay out
             self.tire_wear += 1.5
             degradation = self.tire_wear * 0.3
             traffic_penalty = self.traffic * 5
             lap_time = 20 + degradation + traffic_penalty
+            reward = -lap_time
 
-        reward = -lap_time  # negative lap time
+            # Penalize worn tires
+            if self.tire_wear > 70:
+                reward -= 20
+            elif self.tire_wear > 50:
+                reward -= 10
 
         self.current_lap += 1
         self.traffic = np.random.rand()
