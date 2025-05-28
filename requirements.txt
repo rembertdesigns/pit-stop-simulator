@@ -4,3 +4,4 @@ matplotlib
 gym
 torch
 seaborn
+stable-baselines3[extra]
