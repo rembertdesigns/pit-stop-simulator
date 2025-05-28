@@ -22,7 +22,7 @@ model = PPO(
 )
 
 # ✅ Step 3: Train for 100k timesteps (adjust if needed)
-model.learn(total_timesteps=100_000)
+model.learn(total_timesteps=300_000)
 
 # ✅ Step 4: Save the model
 model_path = "models/ppo_pit_stop"
