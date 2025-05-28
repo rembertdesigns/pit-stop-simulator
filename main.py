@@ -11,7 +11,7 @@ def train_q_learning(episodes=500):
     pit_decisions = []  # Track pit laps
 
     for episode in range(episodes):
-        obs = env.reset()
+        obs, _ = env.reset()  # ✅ extract observation only
         state = agent.discretize(obs)
         total_reward = 0
         done = False
@@ -19,7 +19,8 @@ def train_q_learning(episodes=500):
 
         while not done:
             action = agent.choose_action(state)
-            next_obs, reward, done, _ = env.step(action)
+            next_obs, reward, terminated, truncated, _ = env.step(action)
+            done = terminated or truncated
             next_state = agent.discretize(next_obs)
 
             # Track pit decisions by lap
@@ -75,11 +76,17 @@ def plot_pit_heatmap(pit_decisions, total_laps=58, bins=10):
     plt.tight_layout()
     plt.show()
 
+import numpy as np
+
 if __name__ == "__main__":
     rewards, pit_decisions = train_q_learning()
     plot_rewards(rewards)
-
-    print("First few pit decisions:", pit_decisions[:3])  # 👈 Add this
     plot_pit_heatmap(pit_decisions)
 
+    # ✅ Save Q-learning pit stop decisions
+    import os
+    import numpy as np
+    os.makedirs("data", exist_ok=True)
+    np.save("data/q_learning_pit_decisions.npy", np.array(pit_decisions, dtype=object))
 
+    print("\n✅ Saved: data/q_learning_pit_decisions.npy")
