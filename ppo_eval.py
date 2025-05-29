@@ -1,41 +1,44 @@
-import numpy as np
 from stable_baselines3 import PPO
 from env.gym_race_env import PitStopEnv
+import numpy as np
 import os
 
-# ✅ Load trained PPO model
-model_path = "models/ppo_pit_stop"
-model = PPO.load(model_path)
+print("🏁 Starting evaluation...")
 
-# ✅ Create environment
 env = PitStopEnv()
+model = PPO.load("models/ppo_pit_stop")
 
-# 🔁 Run multiple episodes
-all_pit_decisions = []
-num_episodes = 100
+total_episodes = 1
+ppo_rewards = []
+pit_decisions = []
 
-print("\n🏁 Starting PPO Evaluation...")
-
-for ep in range(num_episodes):
+for episode in range(total_episodes):
     obs, _ = env.reset()
     done = False
-    pit_laps = []
+    total_reward = 0
+    episode_pits = []
 
     while not done:
         action, _ = model.predict(obs)
-        if action == 1:
-            pit_laps.append(int(obs[0]))
         obs, reward, terminated, truncated, _ = env.step(action)
         done = terminated or truncated
 
-    all_pit_decisions.append(pit_laps)
+        if action == 1:
+            episode_pits.append(int(obs[0]))  # Lap number after pit
 
-    if (ep + 1) % 10 == 0:
-        print(f"✅ Episode {ep + 1} complete | Pit stops: {pit_laps}")
+        total_reward += reward
 
-# ✅ Save PPO pit data
+        print(f"Lap {int(obs[0])} | Action: {'PIT' if action == 1 else 'STAY OUT'} | "
+              f"Tire Wear: {env.tire_wear:.2f} | Traffic: {env.traffic:.2f} | Reward: {reward:.2f}")
+
+    ppo_rewards.append(total_reward)
+    pit_decisions.append(episode_pits)
+
+print("\n✅ Evaluation complete.")
+print(f"Total reward: {ppo_rewards[-1]:.2f}")
+print(f"Pit stops occurred at laps: {pit_decisions[-1]}")
+
+# ✅ Save rewards for comparison
 os.makedirs("data", exist_ok=True)
-np.save("data/ppo_pit_decisions.npy", np.array(all_pit_decisions, dtype=object))
-
-print("\n✅ Saved: data/ppo_pit_decisions.npy")
+np.save("data/ppo_rewards.npy", ppo_rewards)
 

@@ -83,10 +83,12 @@ if __name__ == "__main__":
     plot_rewards(rewards)
     plot_pit_heatmap(pit_decisions)
 
-    # ✅ Save Q-learning pit stop decisions
+    # ✅ Save pit stop data and rewards
     import os
     import numpy as np
-    os.makedirs("data", exist_ok=True)
-    np.save("data/q_learning_pit_decisions.npy", np.array(pit_decisions, dtype=object))
 
-    print("\n✅ Saved: data/q_learning_pit_decisions.npy")
+    os.makedirs("data", exist_ok=True)
+
+    # 👇 This is the fix for saving ragged lists (list of lists)
+    np.save("data/q_learning_pit_decisions.npy", np.array(pit_decisions, dtype=object))
+    np.save("data/q_learning_rewards.npy", np.array(rewards))
