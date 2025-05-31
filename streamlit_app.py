@@ -8,7 +8,7 @@ from stable_baselines3 import PPO
 
 st.set_page_config(page_title="F1 Strategy Simulator", layout="wide")
 
-st.title("🏁 Pit Stop Strategy Simulator")
+st.title("🏎 Pit Stop Strategy Simulator")
 
 # Sidebar Settings
 st.sidebar.header("🔧 Simulation Settings")
@@ -20,7 +20,7 @@ track_options = {
     "Spa": {"pit_time": 32, "tire_wear_rate": 1.2, "traffic_penalty": 4.0},
     "Monaco": {"pit_time": 25, "tire_wear_rate": 1.4, "traffic_penalty": 7.5},
     "Bahrain": {"pit_time": 30, "tire_wear_rate": 2.0, "traffic_penalty": 5.0},
-    "Custom": {}  # for manual override
+    "Custom": {}
 }
 selected_track = st.sidebar.selectbox("Choose a Track", list(track_options.keys()))
 
@@ -37,9 +37,9 @@ else:
 # Team and Driver Context
 st.sidebar.subheader("🏎️ Team & Driver Context")
 teams = {
-    "Red Bull": {"color": "#1E41FF", "logo": "🟥 Verstappen"},
+    "Red Bull": {"color": "#1E41FF", "logo": "🇭 Verstappen"},
     "Mercedes": {"color": "#00D2BE", "logo": "⬛ Hamilton"},
-    "Ferrari": {"color": "#DC0000", "logo": "🟥 Leclerc"},
+    "Ferrari": {"color": "#DC0000", "logo": "🇭 Leclerc"},
     "McLaren": {"color": "#FF8700", "logo": "🟧 Norris"},
     "Aston Martin": {"color": "#006F62", "logo": "🟩 Alonso"},
 }
@@ -77,6 +77,8 @@ def run_simulation(strategy_name):
     lap_data = []
     profile = driver_profiles[selected_profile]
     obs, _ = env.reset()
+    total_reward = 0
+    total_pit_lost_time = 0
 
     if strategy_name == "Q-learning":
         agent = QAgent(env)
@@ -87,6 +89,9 @@ def run_simulation(strategy_name):
                 action = 1
             next_obs, reward, terminated, truncated, _ = env.step(action)
             state = agent.discretize(next_obs)
+            total_reward += reward + profile["bonus"]
+            if action == 1:
+                total_pit_lost_time += pit_time
             lap_data.append((env.current_lap, action, next_obs[1], next_obs[2], reward + profile["bonus"]))
             obs = next_obs
             if terminated or truncated:
@@ -99,6 +104,9 @@ def run_simulation(strategy_name):
             if obs[1] > profile["pit_threshold"]:
                 action = 1
             obs, reward, terminated, truncated, _ = env.step(action)
+            total_reward += reward + profile["bonus"]
+            if action == 1:
+                total_pit_lost_time += pit_time
             lap_data.append((env.current_lap, action, obs[1], obs[2], reward + profile["bonus"]))
             if terminated or truncated:
                 break
@@ -107,11 +115,14 @@ def run_simulation(strategy_name):
         for _ in range(total_laps):
             action = 1 if env.current_lap in custom_pit_laps else 0
             obs, reward, terminated, truncated, _ = env.step(action)
+            total_reward += reward
+            if action == 1:
+                total_pit_lost_time += pit_time
             lap_data.append((env.current_lap, action, obs[1], obs[2], reward))
             if terminated or truncated:
                 break
 
-    return lap_data
+    return lap_data, total_reward, total_pit_lost_time
 
 # Animated Chart
 def animate_lap_chart(lap_data, strategy_name, color):
@@ -145,22 +156,37 @@ def animate_lap_chart(lap_data, strategy_name, color):
 
     st.markdown(f"🚗 **Pit Stops:** {[lap for lap, a, *_ in lap_data if a == 1]}")
 
+# Post-Race Review
+def show_review(lap_data, total_reward, total_pit_lost_time):
+    st.subheader("🔍 Post-Race Review")
+    st.metric("Total Pit Time Lost (s)", f"{total_pit_lost_time:.1f}s")
+    st.metric("Total Reward", f"{total_reward:.2f}")
+    st.line_chart({
+        "Tire Wear": [lap[2] for lap in lap_data],
+        "Traffic Intensity": [lap[3] * 100 for lap in lap_data]
+    })
+    pit_count = sum(1 for lap in lap_data if lap[1] == 1)
+    st.metric("Pit Efficiency Rating", f"{(100 - pit_count * 5):.1f}/100")
+
 # Run Simulation
 if start_button:
     if strategy != "Head-to-Head":
-        lap_data = run_simulation(strategy)
+        lap_data, total_reward, pit_time_total = run_simulation(strategy)
         st.subheader(f"📊 {strategy} Strategy Replay")
         animate_lap_chart(lap_data, strategy, teams[selected_team]["color"])
+        show_review(lap_data, total_reward, pit_time_total)
     else:
         st.subheader("⚔️ Head-to-Head Comparison")
         col1, col2 = st.columns(2)
 
         with col1:
             st.markdown("### Q-learning")
-            q_data = run_simulation("Q-learning")
+            q_data, q_reward, q_pit_time = run_simulation("Q-learning")
             animate_lap_chart(q_data, "Q-learning", teams[selected_team]["color"])
+            show_review(q_data, q_reward, q_pit_time)
 
         with col2:
             st.markdown("### PPO")
-            ppo_data = run_simulation("PPO")
+            ppo_data, ppo_reward, ppo_pit_time = run_simulation("PPO")
             animate_lap_chart(ppo_data, "PPO", teams[selected_team]["color"])
+            show_review(ppo_data, ppo_reward, ppo_pit_time)
