@@ -37,8 +37,10 @@ driver_profiles = {
 }
 selected_profile = st.sidebar.selectbox("Driver Profile", list(driver_profiles.keys()))
 
-# Environment Creation
+# Simulation control
+start_button = st.button("▶️ Start Simulation")
 
+# Environment Creation
 def create_env():
     team = teams[selected_team]
     return PitStopEnv(
@@ -49,7 +51,6 @@ def create_env():
     )
 
 # Simulation Logic
-
 def run_simulation(strategy_name):
     env = create_env()
     lap_data = []
@@ -85,16 +86,15 @@ def run_simulation(strategy_name):
     return lap_data
 
 # Animated Line Chart
-
 def animate_lap_chart(lap_data, strategy_name, color):
     fig, ax = plt.subplots()
-    tire_wear_line, = ax.plot([], [], label='Tire Wear', color=color)
-    traffic_line, = ax.plot([], [], label='Traffic', linestyle='--', color='gray')
+    tire_wear_line, = ax.plot([], [], label='Tire Wear (%)', color=color)
+    traffic_line, = ax.plot([], [], label='Traffic Intensity (%)', linestyle='--', color='gray')
 
     ax.set_xlim(0, total_laps)
     ax.set_ylim(0, 100)
     ax.set_xlabel("Lap")
-    ax.set_ylabel("% Value")
+    ax.set_ylabel("Simulation Metric (%)")
     ax.set_title(f"{selected_team} | {selected_profile} Driver: {strategy_name}")
     ax.legend()
 
@@ -117,22 +117,22 @@ def animate_lap_chart(lap_data, strategy_name, color):
 
     st.markdown(f"🚗 **Pit Stops:** {[lap for lap, a, *_ in lap_data if a == 1]}")
 
-# Run Simulations
-if strategy != "Head-to-Head":
-    lap_data = run_simulation(strategy)
-    st.subheader(f"📊 {strategy} Strategy Replay")
-    animate_lap_chart(lap_data, strategy, teams[selected_team]["color"])
-else:
-    st.subheader("⚔️ Head-to-Head Comparison")
-    col1, col2 = st.columns(2)
+# Main Run
+if start_button:
+    if strategy != "Head-to-Head":
+        lap_data = run_simulation(strategy)
+        st.subheader(f"📊 {strategy} Strategy Replay")
+        animate_lap_chart(lap_data, strategy, teams[selected_team]["color"])
+    else:
+        st.subheader("⚔️ Head-to-Head Comparison")
+        col1, col2 = st.columns(2)
 
-    with col1:
-        st.markdown("### Q-learning")
-        q_data = run_simulation("Q-learning")
-        animate_lap_chart(q_data, "Q-learning", teams[selected_team]["color"])
+        with col1:
+            st.markdown("### Q-learning")
+            q_data = run_simulation("Q-learning")
+            animate_lap_chart(q_data, "Q-learning", teams[selected_team]["color"])
 
-    with col2:
-        st.markdown("### PPO")
-        ppo_data = run_simulation("PPO")
-        animate_lap_chart(ppo_data, "PPO", teams[selected_team]["color"])
-
+        with col2:
+            st.markdown("### PPO")
+            ppo_data = run_simulation("PPO")
+            animate_lap_chart(ppo_data, "PPO", teams[selected_team]["color"])
