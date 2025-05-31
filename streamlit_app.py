@@ -12,24 +12,40 @@ st.title("🏁 Pit Stop Strategy Simulator")
 
 # Sidebar Settings
 st.sidebar.header("🔧 Simulation Settings")
-strategy = st.sidebar.selectbox("Choose a strategy", ["Q-learning", "PPO", "Head-to-Head"])
+strategy = st.sidebar.selectbox("Choose a strategy", ["Q-learning", "PPO", "Head-to-Head", "Custom Strategy"])
 total_laps = st.sidebar.slider("Total Laps", 20, 70, 58)
-pit_time = st.sidebar.slider("Pit Stop Time (s)", 20, 40, 30)
-tire_wear_rate = st.sidebar.slider("Tire Wear Rate", 0.5, 2.5, 1.5)
-traffic_penalty = st.sidebar.slider("Traffic Penalty Multiplier", 1.0, 10.0, 5.0)
 
-# NEW: Team and Driver Context
+# Track Selection with auto-parameters
+track_options = {
+    "Spa": {"pit_time": 32, "tire_wear_rate": 1.2, "traffic_penalty": 4.0},
+    "Monaco": {"pit_time": 25, "tire_wear_rate": 1.4, "traffic_penalty": 7.5},
+    "Bahrain": {"pit_time": 30, "tire_wear_rate": 2.0, "traffic_penalty": 5.0},
+    "Custom": {}  # for manual override
+}
+selected_track = st.sidebar.selectbox("Choose a Track", list(track_options.keys()))
+
+if selected_track == "Custom":
+    pit_time = st.sidebar.slider("Pit Stop Time (s)", 20, 40, 30)
+    tire_wear_rate = st.sidebar.slider("Tire Wear Rate", 0.5, 2.5, 1.5)
+    traffic_penalty = st.sidebar.slider("Traffic Penalty Multiplier", 1.0, 10.0, 5.0)
+else:
+    track = track_options[selected_track]
+    pit_time = track["pit_time"]
+    tire_wear_rate = track["tire_wear_rate"]
+    traffic_penalty = track["traffic_penalty"]
+
+# Team and Driver Context
 st.sidebar.subheader("🏎️ Team & Driver Context")
 teams = {
-    "Red Bull": {"color": "#1E41FF", "tire_wear_rate": 1.3, "traffic_penalty": 4.5, "logo": "🟥 Verstappen"},
-    "Mercedes": {"color": "#00D2BE", "tire_wear_rate": 1.5, "traffic_penalty": 5.0, "logo": "⬛ Hamilton"},
-    "Ferrari": {"color": "#DC0000", "tire_wear_rate": 1.7, "traffic_penalty": 5.5, "logo": "🟥 Leclerc"},
-    "McLaren": {"color": "#FF8700", "tire_wear_rate": 1.6, "traffic_penalty": 5.2, "logo": "🟧 Norris"},
-    "Aston Martin": {"color": "#006F62", "tire_wear_rate": 1.4, "traffic_penalty": 5.3, "logo": "🟩 Alonso"},
+    "Red Bull": {"color": "#1E41FF", "logo": "🟥 Verstappen"},
+    "Mercedes": {"color": "#00D2BE", "logo": "⬛ Hamilton"},
+    "Ferrari": {"color": "#DC0000", "logo": "🟥 Leclerc"},
+    "McLaren": {"color": "#FF8700", "logo": "🟧 Norris"},
+    "Aston Martin": {"color": "#006F62", "logo": "🟩 Alonso"},
 }
 selected_team = st.sidebar.selectbox("Choose a team", list(teams.keys()))
 
-# NEW: Driver Personality Profiles
+# Driver Profiles
 driver_profiles = {
     "Aggressive": {"pit_threshold": 80, "bonus": 2},
     "Balanced": {"pit_threshold": 65, "bonus": 1},
@@ -37,17 +53,22 @@ driver_profiles = {
 }
 selected_profile = st.sidebar.selectbox("Driver Profile", list(driver_profiles.keys()))
 
-# Simulation control
+# Custom Strategy Builder
+custom_pit_laps = []
+if strategy == "Custom Strategy":
+    st.sidebar.subheader("🛠️ Custom Strategy")
+    selected_laps = st.sidebar.multiselect("Select Pit Laps", list(range(1, total_laps + 1)))
+    custom_pit_laps = set(selected_laps)
+
 start_button = st.button("▶️ Start Simulation")
 
 # Environment Creation
 def create_env():
-    team = teams[selected_team]
     return PitStopEnv(
         total_laps=total_laps,
         pit_time=pit_time,
-        tire_wear_rate=team["tire_wear_rate"],
-        traffic_penalty=team["traffic_penalty"]
+        tire_wear_rate=tire_wear_rate,
+        traffic_penalty=traffic_penalty
     )
 
 # Simulation Logic
@@ -55,10 +76,10 @@ def run_simulation(strategy_name):
     env = create_env()
     lap_data = []
     profile = driver_profiles[selected_profile]
+    obs, _ = env.reset()
 
     if strategy_name == "Q-learning":
         agent = QAgent(env)
-        obs, _ = env.reset()
         state = agent.discretize(obs)
         for _ in range(total_laps):
             action = agent.choose_action(state)
@@ -73,7 +94,6 @@ def run_simulation(strategy_name):
 
     elif strategy_name == "PPO":
         model = PPO.load("models/ppo_pit_stop")
-        obs, _ = env.reset()
         for _ in range(total_laps):
             action, _ = model.predict(obs)
             if obs[1] > profile["pit_threshold"]:
@@ -83,9 +103,17 @@ def run_simulation(strategy_name):
             if terminated or truncated:
                 break
 
+    elif strategy_name == "Custom Strategy":
+        for _ in range(total_laps):
+            action = 1 if env.current_lap in custom_pit_laps else 0
+            obs, reward, terminated, truncated, _ = env.step(action)
+            lap_data.append((env.current_lap, action, obs[1], obs[2], reward))
+            if terminated or truncated:
+                break
+
     return lap_data
 
-# Animated Line Chart
+# Animated Chart
 def animate_lap_chart(lap_data, strategy_name, color):
     fig, ax = plt.subplots()
     tire_wear_line, = ax.plot([], [], label='Tire Wear (%)', color=color)
@@ -117,7 +145,7 @@ def animate_lap_chart(lap_data, strategy_name, color):
 
     st.markdown(f"🚗 **Pit Stops:** {[lap for lap, a, *_ in lap_data if a == 1]}")
 
-# Main Run
+# Run Simulation
 if start_button:
     if strategy != "Head-to-Head":
         lap_data = run_simulation(strategy)
