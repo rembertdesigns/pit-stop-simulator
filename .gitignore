@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+*.env
+
+# Data & Logs (Optional, but good practice if they get large)
+data/
+logs/
+training_figures/
+
+# Model Files and Training Artifacts
+# --- THIS IS THE CRUCIAL PART ---
+models/*.pkl
+models/*.zip
+saved_agents/
+ppo_pitstop_best_model/
+ppo_pitstop_checkpoints/
+ppo_pitstop_eval_logs/
+ppo_pitstop_tensorboard/

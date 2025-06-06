@@ -1,0 +1,15 @@
+numpy
+pandas
+matplotlib
+scikit-learn # For joblib and the ML model training
+joblib # Explicitly, though often a scikit-learn dependency
+streamlit
+plotly
+fpdf2 # For PDF generation (provides FPDF)
+gymnasium # The updated OpenAI Gym standard
+stable-baselines3[extra]
+torch # Dependency for stable-baselines3 PyTorch policies
+
+# Optional - keep if you are using them elsewhere:
+# seaborn
+# simpy
