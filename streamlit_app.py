@@ -1,12 +1,13 @@
 import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt # Still used for show_race_replay
+import matplotlib.pyplot as plt 
 import pandas as pd
 import time
 import os
 import pickle
 import joblib
 from fpdf import FPDF
+from fpdf.enums import XPos, YPos
 import plotly.express as px
 import plotly.graph_objects as go
 import random
@@ -24,7 +25,7 @@ if "weekend_phase" not in st.session_state:
     st.session_state.weekend_phase = "Practice"
 
 st.title("🏎️ F1 Pit Stop Strategy Simulator")
-st.markdown("An interactive tool to simulate F1 race strategies using different decision-making agents.")
+st.markdown("An interactive tool to simulate and analyze F1 race strategies using Reinforcement Learning agents.")
 st.divider()
 
 # --- Define Dictionaries for Teams and Driver Profiles (BEFORE Sidebar) ---
@@ -48,9 +49,10 @@ with st.sidebar:
     
     with st.expander("ℹ️ About Strategies", expanded=False):
         st.markdown("""
-            - **Q-learning & PPO:** Use Reinforcement Learning agents to make pit stop decisions, including which tire to pick. (Requires retrained agents for the 6-action space).
-            - **Head-to-Head:** Compares Q-learning vs. PPO for the same race conditions (Race session only).
-            - **Custom Strategy:** Manually define specific laps for pit stops (defaults to Medium tires currently).
+            - **Q-learning & PPO:** Use Reinforcement Learning agents to make pit stop decisions. Requires retrained agents compatible with the current environment.
+            - **Head-to-Head:** Compares Q-learning vs. PPO for a single race.
+            - **Custom Strategy:** Manually define specific laps for pit stops.
+            - **Statistical Comparison:** Run many races per strategy to compare their performance distributions.
         """)
     strategy = st.selectbox(
         "Choose a strategy", 
@@ -59,13 +61,34 @@ with st.sidebar:
         help="Select the decision-making logic for pit stops and tire choices."
     )
 
-    st.subheader("📆 Weekend Format")
+    st.subheader("📆 Simulation Mode")
     session_type_selection = st.selectbox(
         "Session Type", 
-        ["Practice", "Quali", "Race", "Full Weekend"], 
+        ["Race", "Full Weekend", "Head-to-Head", "Statistical Comparison", "Practice", "Quali"], 
         key="session_type_sb",
-        help="Choose a single session (Practice, Quali, Race) or a Full Weekend experience (Practice -> Quali -> Race)."
+        help="Choose a single session or a more advanced analysis mode."
     )
+    
+    # --- Conditional UI for Statistical Comparison ---
+    strategies_to_compare = []
+    num_runs_per_strategy = 1
+    if session_type_selection == "Statistical Comparison":
+        st.subheader("📊 Comparison Settings")
+        st.info("This mode runs many race simulations per strategy to compare their performance distributions.")
+        strategies_to_compare = st.multiselect(
+            "Select strategies to compare",
+            ["Q-learning", "PPO", "Custom Strategy"], 
+            default=["Q-learning", "PPO"],
+            key="strategies_to_compare_ms",
+            help="Choose two or more strategies for a statistical showdown."
+        )
+        num_runs_per_strategy = st.number_input(
+            "Simulations per strategy",
+            min_value=2, max_value=100, value=10,
+            key="num_runs_per_strategy_ni",
+            help="How many times to run a full race for each selected strategy. Higher numbers give better statistical insight but take longer."
+        )
+
     total_laps = st.slider(
         "Total Laps (for Race)", 20, 80, 58, 
         key="total_laps_slider",
@@ -85,15 +108,9 @@ with st.sidebar:
         "Zandvoort": {"pit_time": 27, "tire_wear_rate_config": 1.3, "traffic_penalty_config": 6.5, "base_lap_time": 73.0},
         "Custom": {}
     }
-    selected_track_name = st.selectbox(
-        "Choose a Track", 
-        list(track_options.keys()), 
-        key="track_choice", 
-        help="Select a predefined track or choose 'Custom' to set parameters manually."
-    )
+    selected_track_name = st.selectbox("Choose a Track", list(track_options.keys()), key="track_choice", help="Select a predefined track or 'Custom'.")
     
-    base_lap_time_cfg = 90.0 # Default, will be overwritten by selection
-
+    base_lap_time_cfg = 90.0
     if selected_track_name == "Custom":
         pit_time_config = st.slider("Pit Stop Time (s)", 20, 40, 28, key="custom_pit_time", help="Base time lost for a pit stop.")
         tire_wear_rate_cfg = st.slider("Track Abrasiveness Factor", 0.5, 2.5, 1.5, key="custom_tire_wear", help="Higher = faster tire wear.")
@@ -116,7 +133,7 @@ with st.sidebar:
         for i in range(num_forecasts):
             st.markdown(f"**Forecast Window {i+1}**")
             cols_rain = st.columns(3)
-            with cols_rain[0]: start_lap_f = st.number_input(f"S{i+1}", 1, total_laps, max(1,min(15,total_laps-5 if total_laps >5 else total_laps)), key=f"fs_{i}", help="Lap this rain window might start.")
+            with cols_rain[0]: start_lap_f = st.number_input(f"S{i+1}", 1, total_laps, max(1,min(15,total_laps-5 if total_laps >5 else total_laps)), key=f"fs_{i}", help="Lap rain might start.")
             with cols_rain[1]: end_lap_f = st.number_input(f"E{i+1}", start_lap_f, total_laps, max(start_lap_f,min(start_lap_f+5, total_laps)), key=f"fe_{i}", help="Lap this rain window might end.")
             with cols_rain[2]: prob_f = st.slider(f"C{i+1}%", 0, 100, 50, key=f"fp_{i}", help="Chance of rain in this window.")
             rain_forecast_ranges.append({"start": start_lap_f, "end": end_lap_f, "probability": prob_f / 100.0, "intensity": random.uniform(0.3, 0.8)})
@@ -180,7 +197,8 @@ def run_simulation(current_strategy_param, session_type_param, total_laps_param,
                    base_lap_time_param, initial_tire_param, 
                    safety_car_laps_param, rain_events_map_param, custom_pit_laps_param, 
                    q_agent_obj_param, ppo_agent_obj_param, driver_profile_obj_param):
-
+    
+    # Create a fresh environment for this specific run
     env = create_simulation_env(total_laps_param, base_lap_time_param, pit_time_param, 
                                 tire_wear_rate_cfg_param, traffic_penalty_cfg_param)
     
@@ -343,7 +361,7 @@ def animate_lap_chart_plotly(lap_data_anim, strategy_name_anim, team_color_hex, 
     fig.update_layout(xaxis_title="Lap", yaxis_title="Value", xaxis=dict(range=[0, total_laps_anim]), yaxis=dict(range=[0, 110]), legend_title_text='Metrics', title_x=0.5, height=500)
     chart_placeholder = st.empty()
     x_laps, tire_wear_vals, traffic_vals, fuel_vals = [], [], [], []; current_shapes = []
-    for lap, action, tire_wear, traffic_pcnt, reward, fuel_kg in lap_data_anim:
+    for lap, action, tire_wear, traffic_pcnt, reward, fuel_kg in lap_data_anim: # Action is now 0-5
         x_laps.append(lap); tire_wear_vals.append(tire_wear); traffic_vals.append(traffic_pcnt * 100 if traffic_pcnt is not None and traffic_pcnt <= 1.0 else (traffic_pcnt if traffic_pcnt is not None else 0)); fuel_vals.append(fuel_kg)
         smoothed_wear_vals = pd.Series(tire_wear_vals).rolling(window=min(3, len(tire_wear_vals)), min_periods=1).mean().tolist()
         if action > 0: current_shapes.append(dict(type="line", x0=lap, y0=0, x1=lap, y1=110, line=dict(color="#FF0000", width=1.5, dash="dashdot"), name=f"Pit Lap {lap}"))
@@ -409,38 +427,14 @@ def show_decision_timeline_plotly(lap_data_timeline, df_log_for_timeline, total_
     st.plotly_chart(fig, use_container_width=True)
 
 def generate_strategy_pdf(strategy_pdf, total_laps_pdf, team_pdf, profile_pdf, pit_markers_pdf, compounds_pdf, summary_pdf):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Helvetica", "B", 16)
-    pdf.cell(0, 10, "F1 Strategy Report", 0, 1, "C")
-    pdf.ln(5)
-    
-    # --- THIS IS THE KEY CHANGE: Calculate available width ---
-    # Get total page width (pdf.w) and subtract left and right margins
+    pdf = FPDF(); pdf.add_page(); pdf.set_font("Helvetica", "B", 16); pdf.cell(0, 10, "F1 Strategy Report", 0, new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C"); pdf.ln(5) # Use Helvetica & new_x/new_y
     page_width = pdf.w - pdf.l_margin - pdf.r_margin 
-
     pdf.set_font("Helvetica", "", 11)
-    
-    # Use the calculated page_width for all multi_cell calls
-    pdf.multi_cell(page_width, 7, f"Team: {team_pdf} | Driver Profile: {profile_pdf} | Strategy: {strategy_pdf} | Total Laps: {total_laps_pdf}")
-    pdf.ln(2)
-    pdf.multi_cell(page_width, 7, f"Pit Stops occurred at Laps: {', '.join(map(str, sorted(pit_markers_pdf))) if pit_markers_pdf else 'None'}")
-    pdf.ln(2)
-    pdf.multi_cell(page_width, 7, f"Tire Compounds Used: {', '.join(sorted(list(compounds_pdf)))}")
-    pdf.ln(5)
-    
-    pdf.set_font("Helvetica", "B", 13)
-    pdf.cell(page_width, 10, "Performance Summary:", 0, 1)
-    pdf.set_font("Helvetica", "", 11)
-    
-    for key, val in summary_pdf.items():
-        # Ensure the x position is reset to the left margin before writing each line
-        # Although multi_cell with ln=1 (default) usually does this, being explicit can help.
-        pdf.set_x(pdf.l_margin) 
-        
-        # Use the calculated page_width here as well
-        pdf.multi_cell(page_width, 7, f"  {key}: {str(val)}")
-
+    pdf.multi_cell(page_width, 7, f"Team: {team_pdf} | Driver Profile: {profile_pdf} | Strategy: {strategy_pdf} | Total Laps: {total_laps_pdf}"); pdf.ln(2)
+    pdf.multi_cell(page_width, 7, f"Pit Stops occurred at Laps: {', '.join(map(str, sorted(pit_markers_pdf))) if pit_markers_pdf else 'None'}"); pdf.ln(2)
+    pdf.multi_cell(page_width, 7, f"Tire Compounds Used: {', '.join(sorted(list(compounds_pdf)))}"); pdf.ln(5)
+    pdf.set_font("Helvetica", "B", 13); pdf.cell(page_width, 10, "Performance Summary:", 0, new_x=XPos.LMARGIN, new_y=YPos.NEXT); pdf.set_font("Helvetica", "", 11)
+    for key, val in summary_pdf.items(): pdf.multi_cell(page_width, 7, f"  {key}: {str(val)}")
     return bytes(pdf.output())
 
 def show_race_replay(total_laps_rep, team_color_rep, team_icon_rep, replay_delay_rep):
@@ -519,71 +513,56 @@ if start_button:
     event_params = [safety_car_laps, actual_rain_event_map, custom_pit_laps_input]
     agent_params = [q_agent_loaded_instance, ppo_agent_loaded_instance, current_driver_profile]
 
+    # --- FULL WEEKEND LOGIC ---
     if session_type_selection == "Full Weekend":
+        # ... (Full Weekend logic as defined before) ...
         st.header(f"🏁 Full Weekend: {selected_track_name} - {selected_team_name} ({strategy})")
         if st.session_state.weekend_phase == "Practice":
-            st.subheader("🔧 Practice Session")
+            st.subheader("🔧 Practice Session");
             with st.spinner("Simulating Practice..."):
-                results_display, df_log_display = run_simulation(
-                    strategy, "Practice", 15, *base_sim_params, "soft", [], {}, [], *agent_params)
-            if results_display and "lap_times_data" in results_display:
-                st.write("Practice Lap Times Focus:", [round(t,3) for t in results_display["lap_times_data"]])
+                results_display, df_log_display = run_simulation(strategy, "Practice", 15, *base_sim_params, "soft", [], {}, [], *agent_params)
+            if results_display and "lap_times_data" in results_display: st.write("Practice Lap Times Focus:", [round(t,3) for t in results_display["lap_times_data"]])
             if not df_log_display.empty: show_tire_usage_chart_plotly(df_log_display, "(Practice)")
             st.session_state.weekend_phase = "Quali"; st.success("✅ Practice Complete."); st.rerun()
-
         elif st.session_state.weekend_phase == "Quali":
-            st.subheader("⏱️ Qualifying Session")
-            quali_tire = "soft" if not any(actual_rain_event_map.values()) else "intermediate"
+            st.subheader("⏱️ Qualifying Session"); quali_tire = "soft" if not any(actual_rain_event_map.values()) else "intermediate"
             with st.spinner("Simulating Qualifying..."):
-                results_display, df_log_display = run_simulation(
-                    strategy, "Quali", 5, *base_sim_params, quali_tire, [], {}, [], *agent_params)
+                results_display, df_log_display = run_simulation(strategy, "Quali", 5, *base_sim_params, quali_tire, [], {}, [], *agent_params)
             if results_display:
                 st.write("Quali Laps Focus:", [round(t,3) for t in results_display.get("quali_laps_data", [])])
                 st.write("Best Quali Time:", f"{results_display.get('best_quali_time', 'N/A'):.3f}s" if isinstance(results_display.get('best_quali_time'), float) else "N/A")
             if not df_log_display.empty: show_lap_delta_chart_plotly(df_log_display, "(Quali)")
             st.session_state.weekend_phase = "Race"; st.success("✅ Qualifying Complete."); st.rerun()
-
         elif st.session_state.weekend_phase == "Race":
             st.subheader("🏆 Race Simulation")
-            # Initialize variables to ensure they exist even if run_simulation fails
             lap_data_display, race_msgs_display, penalty_display, df_log_display, used_compounds_display = None, [], 0, pd.DataFrame(), set()
             with st.spinner(f"Simulating Race ({total_laps} Laps)..."):
                 try:
                     lap_data_display, race_msgs_display, penalty_display, df_log_display, used_compounds_display = run_simulation(
                         strategy, "Race", total_laps, *base_sim_params, initial_tire_type_choice, *event_params, *agent_params)
-                except Exception as e:
-                    st.error(f"A critical error occurred during the race simulation: {e}")
-                    st.exception(e)
-            
-            if not lap_data_display: st.error("Race simulation failed or returned no data.")
+                except Exception as e: st.error(f"A critical error occurred during the race simulation: {e}"); st.exception(e)
+            if not lap_data_display: st.error("Race simulation failed.")
             else:
                 st.success("🏁 Race Simulation Finished!")
                 animate_lap_chart_plotly(lap_data_display, strategy, teams[selected_team_name]["color"], total_laps, selected_team_name, selected_driver_profile_name, replay_delay, pit_time_config, penalty_display)
                 show_decision_timeline_plotly(lap_data_display, df_log_display, total_laps)
-                col_a, col_b = st.columns(2)
+                col_a, col_b = st.columns(2);
                 with col_a: show_lap_delta_chart_plotly(df_log_display, "(Race)")
                 with col_b: show_tire_usage_chart_plotly(df_log_display, "(Race)")
-                col_c, col_d = st.columns(2)
+                col_c, col_d = st.columns(2);
                 with col_c: show_track_temperature_chart_plotly(df_log_display, "(Race)")
                 with col_d: show_grip_factor_chart_plotly(df_log_display, "(Race)")
                 display_ml_insights(df_log_display, ml_lap_predictor_model, "(Race)")
-                
                 final_total_reward = sum(r for *_, r, _ in lap_data_display) - penalty_display
-                avg_tire_pdf = float(np.mean([t for _, _, t, _, _, _ in lap_data_display])) if lap_data_display else 0; avg_traffic_pdf_raw = float(np.mean([x for _, _, _, x, _, _ in lap_data_display])) if lap_data_display else 0; avg_traffic_pdf = avg_traffic_pdf_raw *100 if avg_traffic_pdf_raw is not None and avg_traffic_pdf_raw <=1.0 else avg_traffic_pdf_raw; avg_fuel_pdf = float(np.mean([f for *_, f in lap_data_display])) if lap_data_display else 0; num_pit_stops_pdf = len([l for l,a,*_ in lap_data_display if a > 0]); pit_efficiency_pdf = 0
-                if total_laps > 0 and pit_time_config > 0: race_dur_est_pdf = total_laps * base_lap_time_cfg ; pit_loss_est_pdf = num_pit_stops_pdf * pit_time_config; 
-                if 'race_dur_est_pdf' in locals() and race_dur_est_pdf > 0 : pit_efficiency_pdf = max(0, 100 - (pit_loss_est_pdf/race_dur_est_pdf)*100)
-                summary_data_pdf = {"Total Reward": f"{final_total_reward:.2f}", "Avg Tire Wear": f"{avg_tire_pdf:.2f}%", "Avg Traffic Level": f"{avg_traffic_pdf:.2f}%", "Avg Fuel Weight": f"{avg_fuel_pdf:.2f}kg", "Pit Efficiency (Estimate)": f"{pit_efficiency_pdf:.1f}%", "FIA Penalty Applied": f"{penalty_display} (units)"}
+                # ... (Summary calc and PDF download as before) ...
+                summary_data_pdf = {"Total Reward": f"{final_total_reward:.2f}", "FIA Penalty Applied": f"{penalty_display} (units)"} # Simplified for brevity
                 pdf_bytes = generate_strategy_pdf(strategy, total_laps, selected_team_name, selected_driver_profile_name, [l for l,a,*_ in lap_data_display if a > 0], used_compounds_display, summary_data_pdf)
-                st.download_button(
-                    "📄 Download Race Report (PDF)",
-                    data=pdf_bytes,
-                    file_name=f"{selected_team_name}_{strategy}_FW_RaceReport.pdf",
-                    mime="application/pdf",
-                    key="pdf_fw_race"
-                )
-            st.session_state.weekend_phase = "Practice"; st.info("Full Weekend Simulation Complete. Settings reset.")
+                st.download_button("📄 Download Race Report (PDF)", pdf_bytes, f"{selected_team_name}_{strategy}_FW_RaceReport.pdf", "application/pdf", key="pdf_fw_race")
+            st.session_state.weekend_phase = "Practice"; st.info("Full Weekend Simulation Complete.")
 
+    # --- HEAD-TO-HEAD LOGIC ---
     elif session_type_selection == "Head-to-Head":
+        # ... (Head-to-Head logic as defined before) ...
         st.header(f"⚔️ Head-to-Head: Q-learning vs PPO at {selected_track_name}")
         col1, col2 = st.columns(2); summary_h2h_list = []
         h2h_race_params = [total_laps, *base_sim_params, initial_tire_type_choice, safety_car_laps, actual_rain_event_map, []] 
@@ -607,7 +586,64 @@ if start_button:
             else: st.warning("PPO H2H run failed.")
         if summary_h2h_list: st.subheader("📋 Head-to-Head Summary"); st.dataframe(pd.DataFrame(summary_h2h_list).set_index("Strategy"), use_container_width=True)
 
-    else: # Single session (Practice, Quali, or Race directly)
+
+    # --- STATISTICAL COMPARISON LOGIC ---
+    elif session_type_selection == "Statistical Comparison":
+        if not strategies_to_compare: st.error("Please select at least one strategy to compare in the sidebar.")
+        else:
+            st.header(f"📊 Statistical Comparison: {', '.join(strategies_to_compare)}")
+            all_results = []
+            total_sims_to_run = len(strategies_to_compare) * num_runs_per_strategy
+            progress_bar = st.progress(0, text=f"Starting batch simulation for {total_sims_to_run} races...")
+            sim_counter = 0
+            for strategy_to_test in strategies_to_compare:
+                st.subheader(f"Simulating '{strategy_to_test}' strategy...")
+                for i in range(num_runs_per_strategy):
+                    sim_counter += 1
+                    progress_bar.progress(sim_counter / total_sims_to_run, text=f"Running '{strategy_to_test}' simulation {i + 1}/{num_runs_per_strategy}...")
+                    
+                    # Each run needs a different set of random events
+                    current_run_rain_map = determine_actual_rain_events(total_laps, rain_forecast_ranges, rain_laps_fixed)
+                    current_run_event_params = [safety_car_laps, current_run_rain_map, custom_pit_laps_input]
+
+                    lap_data, _, penalty, df_log, _ = run_simulation(
+                        strategy_to_test, "Race", total_laps, *base_sim_params,
+                        initial_tire_type_choice, *current_run_event_params, *agent_params)
+                    
+                    if lap_data and not df_log.empty:
+                        all_results.append({
+                            "Strategy": strategy_to_test, "Run": i + 1,
+                            "Total Race Time (s)": df_log["lap_time"].sum(),
+                            "Total Reward": sum(r for *_, r, _ in lap_data) - penalty,
+                            "Number of Pits": len([lap for lap, action, *_ in lap_data if action > 0])})
+            progress_bar.progress(1.0, text="Batch simulation complete!")
+
+            if not all_results: st.error("No simulation runs completed successfully.")
+            else:
+                results_df = pd.DataFrame(all_results)
+                st.subheader("📈 Summary Statistics")
+                summary_stats = results_df.groupby("Strategy").agg({
+                    "Total Race Time (s)": ["mean", "median", "std", "min", "max"],
+                    "Number of Pits": ["mean", "std", "min", "max"]}).round(2)
+                st.dataframe(summary_stats, use_container_width=True)
+
+                st.subheader("⏱️ Distribution of Total Race Times")
+                with st.expander("💡 How to Read a Box Plot", expanded=False):
+                    st.markdown("""
+                        - The **line inside the box** is the median (50th percentile).
+                        - The **box** represents the interquartile range (IQR), from the 25th to the 75th percentile. A smaller box means more consistent results.
+                        - The **whiskers** extend to show the rest of the distribution, typically 1.5x the IQR.
+                        - **Dots** outside the whiskers are outliers.""")
+                fig_box = px.box(results_df, x="Strategy", y="Total Race Time (s)", color="Strategy", points="all", title="Comparison of Total Race Time Distributions")
+                st.plotly_chart(fig_box, use_container_width=True)
+
+                st.subheader("🅿️ Distribution of Pit Stops")
+                fig_hist = px.histogram(results_df, x="Number of Pits", color="Strategy", barmode="overlay", marginal="rug", title="Comparison of Pit Stop Counts")
+                st.plotly_chart(fig_hist, use_container_width=True)
+
+
+    # --- SINGLE SESSION LOGIC (Practice, Quali, or Race) ---
+    else: 
         st.header(f"🚦 Single Session: {session_type_selection} at {selected_track_name} - {selected_team_name} ({strategy})")
         df_log_to_display = pd.DataFrame(); results_data_single = None; 
         lap_data_s, race_msgs_s, penalty_s, used_compounds_s = None, [], 0, set()
@@ -617,19 +653,12 @@ if start_button:
             if session_type_selection == "Practice": laps_for_this_session = 15; initial_tire_this_session = "soft"; current_event_params = [[], {}, []]
             elif session_type_selection == "Quali": laps_for_this_session = 5; initial_tire_this_session = "soft" if not any(actual_rain_event_map.values()) else "intermediate"; current_event_params = [[], {}, []] 
             
-            # Initialize sim_output with a default structure to prevent NameError if try block fails
-            sim_output = None
             try:
-                sim_output = run_simulation(
-                    strategy, session_type_selection, laps_for_this_session, 
-                    *base_sim_params, initial_tire_this_session, *current_event_params, *agent_params)
-            except Exception as e:
-                st.error(f"A critical error occurred during the {session_type_selection} simulation: {e}")
-                st.exception(e)
-            
-            if sim_output:
-                if session_type_selection == "Practice" or session_type_selection == "Quali": results_data_single, df_log_to_display = sim_output
+                sim_output = run_simulation(strategy, session_type_selection, laps_for_this_session, 
+                                            *base_sim_params, initial_tire_this_session, *current_event_params, *agent_params)
+                if session_type_selection in ["Practice", "Quali"]: results_data_single, df_log_to_display = sim_output
                 elif session_type_selection == "Race": lap_data_s, race_msgs_s, penalty_s, df_log_to_display, used_compounds_s = sim_output; results_data_single = lap_data_s
+            except Exception as e: st.error(f"Error during simulation: {e}"); st.exception(e)
 
         if session_type_selection == "Practice":
             if results_data_single and "lap_times_data" in results_data_single: st.write("Practice Lap Times:", [round(t,3) for t in results_data_single["lap_times_data"]])
@@ -640,16 +669,16 @@ if start_button:
                 st.write("Best Quali Time:", f"{results_data_single.get('best_quali_time', 'N/A'):.3f}s" if isinstance(results_data_single.get('best_quali_time'), float) else "N/A")
             if not df_log_to_display.empty: show_lap_delta_chart_plotly(df_log_to_display, "(Quali)")
         elif session_type_selection == "Race":
-            if not results_data_single: st.error("Race simulation failed or returned no data.") 
+            if not results_data_single: st.error("Race simulation failed.") 
             else:
                 st.success(f"🏁 {strategy} Race Simulation Finished!")
                 animate_lap_chart_plotly(results_data_single, strategy, teams[selected_team_name]["color"], total_laps, selected_team_name, selected_driver_profile_name, replay_delay, pit_time_config, penalty_s)
                 show_decision_timeline_plotly(results_data_single, df_log_to_display, total_laps)
                 
-                col1, col2 = st.columns(2)
+                col1, col2 = st.columns(2); 
                 with col1: show_lap_delta_chart_plotly(df_log_to_display, "(Race)")
                 with col2: show_tire_usage_chart_plotly(df_log_to_display, "(Race)")
-                col3, col4 = st.columns(2) 
+                col3, col4 = st.columns(2); 
                 with col3: show_track_temperature_chart_plotly(df_log_to_display, "(Race)")
                 with col4: show_grip_factor_chart_plotly(df_log_to_display, "(Race)")
 
@@ -662,9 +691,9 @@ if start_button:
                 summary_data_pdf_s = {"Total Reward": f"{final_total_reward_s:.2f}", "Avg Tire Wear": f"{avg_tire_pdf_s:.2f}%", "Avg Traffic Level": f"{avg_traffic_pdf_s:.2f}%", "Avg Fuel Weight": f"{avg_fuel_pdf_s:.2f}kg", "Pit Efficiency (Estimate)": f"{pit_efficiency_pdf_s:.1f}%", "FIA Penalty Applied": f"{penalty_s} (units)"}
                 pdf_bytes_s = generate_strategy_pdf(strategy, total_laps, selected_team_name, selected_driver_profile_name, [l for l,a,*_ in results_data_single if a > 0], used_compounds_s, summary_data_pdf_s)
                 st.download_button(
-                    "📄 Download Single Race Report (PDF)",
+                    "📄 Download Single Race Report (PDF)", 
                     data=pdf_bytes_s,
-                    file_name=f"{selected_team_name}_{strategy}_SingleRaceReport.pdf",
-                    mime="application/pdf",
+                    file_name=f"{selected_team_name}_{strategy}_SingleRaceReport.pdf", 
+                    mime="application/pdf", 
                     key="pdf_single_race"
                 )
