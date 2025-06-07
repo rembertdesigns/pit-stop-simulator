@@ -179,3 +179,35 @@ Once models are trained, launch the app:
 streamlit run streamlit_app.py
 ```
 Open the URL provided in your terminal (usually `http://localhost:8501`) in your web browser.
+
+---
+
+## 🛣️ Future Enhancements (Roadmap)
+
+- [ ] **"What-If" Scenario Analysis**: Build a tool to re-run a race with a modified decision to see its impact on the outcome.
+- [ ] **Multi-Agent Competition**: Expand the simulation to include multiple competing cars making their own strategic decisions.
+- [ ] **UI for Agent Training**: Allow starting training and tuning basic hyperparameters directly from the Streamlit UI.
+- [ ] **Driver Error & Reliability**: Introduce a chance for driver errors or car issues that force strategic changes.
+- [ ] **More Sophisticated Driver Profile Impacts**: Have driver profiles more directly and dynamically influence on-track pace variation or tire wear rates within the environment.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 🙌 Credits & Acknowledgements
+
+Built with Python and the amazing open-source libraries:
+
+- Streamlit  
+- Gymnasium  
+- Stable Baselines3  
+- Scikit-learn  
+- Pandas  
+- NumPy  
+- Plotly
+
+Inspired by the complex and fascinating world of **Formula 1 strategy**.
