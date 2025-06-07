@@ -148,3 +148,34 @@ The primary reward is the **negative of the lap time**. Agents aim to maximize t
 git clone https://github.com/rembertdesigns/pit-stop-simulator.git
 cd pit-stop-simulator
 ```
+2. **Create and activate a virtual environment (recommended):**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On macOS/Linux
+# On Windows: venv\Scripts\activate
+```
+3. **Install dependencies from `requirements.txt`:**
+
+```bash
+pip install -r requirements.txt
+```
+(Note: Your `requirements.txt` should be updated to include `streamlit`, `pandas`, `plotly`, `fpdf2`, `gymnasium`, `scikit-learn`, `stable-baselines3[extra]`, etc.)
+
+### Running the Simulator
+
+1. **Train Your Models (Required First Step):**
+
+- The trained models are not included in the repository. You must train them yourself first. Follow the sequence below.
+- **a. Generate Simulation Data:** Run `streamlit run streamlit_app.py` and execute a few simulations to generate log data in `logs/gym_race_lap_data.csv`.
+- **b. Train Lap Time Predictor:** Run `python3 train_lap_model.py`. This creates `models/lap_time_predictor.pkl`.
+- **c. Train Q-Learning Agents:** Run `python3 main.py` to batch-train agents for all team/profile combinations. This populates `saved_agents/`.
+- **d. Train PPO Agent:** Run `python3 train_ppo.py`. This creates `models/ppo_pit_stop.zip`.
+
+2. **Launch the Streamlit Application:**
+
+Once models are trained, launch the app:
+```bash
+streamlit run streamlit_app.py
+```
+Open the URL provided in your terminal (usually `http://localhost:8501`) in your web browser.
