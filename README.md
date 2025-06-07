@@ -72,36 +72,37 @@ A rich, interactive UI to:
 ### PDF Generation
 - `fpdf2`
 
-
 ---
 
 ## 🧱 Project Structure
 ```bash
 pit-stop-simulator/
 │
-├── main.py                      # Q-learning training loop + pit heatmap
-├── ppo_train.py                 # Train PPO agent using Stable-Baselines3
-├── ppo_eval.py                  # Evaluate PPO agent and track pit stops
-├── compare_strategies.py        # Visual side-by-side comparison of pit strategies
-├── streamlit_app.py             # Interactive Streamlit UI with race events and agent simulations
+├── streamlit_app.py         # Main Streamlit application: UI and simulation logic
 │
 ├── env/
-│   └── gym_race_env.py          # Custom OpenAI Gymnasium race simulation environment
+│   └── gym_race_env.py      # Custom Gymnasium F1 race simulation environment
 │
 ├── rl/
-│   └── q_learning_agent.py      # Q-learning agent logic
+│   └── q_learning_agent.py  # Q-learning agent implementation
 │
-├── models/
-│   └── ppo_pit_stop.zip         # Saved PPO model
+├── models/                  # (Gitignored) Directory for trained models
+│   ├── ppo_pit_stop.zip     
+│   └── lap_time_predictor.pkl
 │
-├── saved_agents/                # Saved Q-learning agents (per team/profile)
+├── saved_agents/            # (Gitignored) Directory for saved Q-learning agent Q-tables
+│   └── e.g., Ferrari_Balanced_q.pkl
 │
-├── data/
-│   ├── q_learning_pit_decisions.npy   # Pit stop logs from Q-learning
-│   └── ppo_pit_decisions.npy          # Pit stop logs from PPO
+├── train_ppo.py             # Script to train the PPO agent
+├── train_lap_model.py       # Script to train the ML lap time predictor model
+├── main.py                  # Script for batch-training Q-Learning agents
+├── ppo_eval.py              # Example script to evaluate a trained PPO agent
 │
-├── requirements.txt             # Python package dependencies
-└── README.md                    # Project overview and setup instructions
+├── logs/
+│   └── gym_race_lap_data.csv # Detailed lap-by-lap log data from simulations
+│
+├── requirements.txt         # Python package dependencies
+└── README.md                # This file
 ```
 ---
 
