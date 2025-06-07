@@ -1,12 +1,77 @@
-# 🏎️ Pit Stop Optimization Simulator
+# 🏎️ F1 Pit Stop Strategy Simulator
 
-A reinforcement learning simulation to optimize Formula 1 pit stop strategies based on tire wear, traffic conditions, and lap count. Built using a custom `SimPy` and `Gym` environment, and trained with a tabular Q-learning agent.
+An advanced, interactive simulator built with Python, Streamlit, and Reinforcement Learning (`Q-learning` & `PPO`) to explore and optimize Formula 1 pit stop strategies.
+
+This application simulates full F1 races, considering dynamic conditions including non-linear tire degradation, track characteristics, fuel load, traffic, probabilistic weather (rain), and on-track incidents like Safety Cars and Virtual Safety Cars (VSC).
 
 ---
 
-## 🎯 Objective
+## ✨ Key Features
 
-Teach an agent to decide **when to pit** during a race to minimize lap times and maximize performance under dynamic conditions.
+### Dynamic Race Environment
+A custom-built environment using `gymnasium` that simulates:
+
+- Lap-by-lap race progression with track-specific base lap times.
+- **Advanced Tire Model**: Non-linear degradation profiles for multiple compounds (Soft, Medium, Hard) and wet-weather tires (Intermediate, Wet), each with unique wear rates and performance drop-offs.
+- **Fuel consumption** and its impact on lap times.
+- Variable **track grip** and **temperature evolution**.
+- **Randomized traffic** events affecting lap times.
+
+### Intelligent Strategy Agents
+
+- **Q-Learning Agent**: A custom-built agent that learns optimal pit strategies by discretizing the complex state space.
+- **PPO Agent**: Utilizes Proximal Policy Optimization from `stable-baselines3` for more advanced strategy learning.
+- **Expanded Action Space**: Agents can make granular decisions, choosing not just when to pit, but which specific tire compound to switch to.
+
+### Comprehensive Streamlit Dashboard
+
+A rich, interactive UI to:
+
+- Configure detailed race parameters (laps, track selection, driver profiles).
+- Define complex race scenarios with probabilistic rain forecasts and scheduled Safety Car periods.
+- Run simulations using different strategies: **Q-learning**, **PPO**, **Head-to-Head**, and **Custom**.
+- **Statistical Comparison Mode**: Run batch simulations (e.g., 50 races per strategy) to robustly compare the performance distributions of different agents using summary tables and box plots.
+
+### Advanced Data Visualization (with Plotly)
+
+- Real-time animated lap metrics (tire wear, fuel, traffic).
+- Strategic Event Timeline with emoji markers: 🅿️ Pits, 🌧️ Rain, ⚠️ SC, 🚦 VSC.
+- Detailed post-race analysis charts (lap time delta, tire usage, track conditions).
+
+### ML-Powered Insights & Reporting
+
+- Integrates a separately trained model (`lap_time_predictor.pkl`) to predict lap times based on race conditions, offering a comparison with the simulation's actual outcomes.
+- Generates **downloadable PDF race summary reports**.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Core**: Python 3.10+
+  
+### Simulation Environment
+- `gymnasium`
+- `NumPy`
+- `Pandas`
+
+### Reinforcement Learning
+- Custom Q-learning implementation
+- `stable-baselines3[extra]` for PPO
+- `torch` (backend for SB3)
+
+### Machine Learning (Lap Time Predictor)
+- `scikit-learn` (RandomForestRegressor)
+- `joblib`
+
+### User Interface & Visualization
+- `Streamlit`
+- `Plotly`
+- `Matplotlib`
+- `Seaborn`
+
+### PDF Generation
+- `fpdf2`
+
 
 ---
 
