@@ -1,5 +1,7 @@
 # 🏎️ F1 Pit Stop Strategy Simulator
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://pit-stop-sim.streamlit.app/)
+
 An advanced, interactive simulator built with Python, Streamlit, and Reinforcement Learning (`Q-learning` & `PPO`) to explore and optimize Formula 1 pit stop strategies.
 
 This application simulates full F1 races, considering dynamic conditions including non-linear tire degradation, track characteristics, fuel load, traffic, probabilistic weather (rain), and on-track incidents like Safety Cars and Virtual Safety Cars (VSC).
