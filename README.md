@@ -106,87 +106,45 @@ pit-stop-simulator/
 ```
 ---
 
-## 🚀 How It Works
+## ⚙️ Simulation Core Details
 
-- **Environment** simulates 58 laps with dynamic traffic and tire wear
-- **Actions**: `0 = stay out`, `1 = pit`
-- **Observations**: `[lap number, tire wear, traffic level]`
-- **Rewards**: Negative lap times (shorter = better)
+The `PitStopEnv` provides a **7-dimensional observation space** to the agents:
 
----
+- **Current Lap**: `[0, total_laps]`
+- **Tire Wear**: `[0.0, 100.0]`
+- **Traffic Level**: `[0.0, 1.0]`
+- **Fuel Weight**: `[0.0, 110.0]` (in kg)
+- **Rain Active**: `0` or `1`
+- **Safety Car Active**: `0` or `1`
+- **VSC Active**: `0` or `1`
 
-## 🤖 Agent Logic (Q-learning)
+### Actions Available to Agents (`Discrete(6)`):
 
-- Discretizes continuous state space (lap, tire, traffic)
-- Balances exploration vs. exploitation using ε-greedy strategy
-- Updates Q-values over episodes to learn optimal pit timing
+- `0`: Stay Out  
+- `1`: Pit for Soft Tires  
+- `2`: Pit for Medium Tires  
+- `3`: Pit for Hard Tires  
+- `4`: Pit for Intermediate Tires  
+- `5`: Pit for Wet Tires  
 
----
+### Reward System
 
-## 📊 Visualization
-
-After training, a reward curve is plotted showing the agent's learning progress over time.
-
----
-
-## 🧪 Streamlit Simulation Dashboard
-
-The interactive UI lets you:
-
-- 🔁 Replay Animated Laps with ghost trails
-- 📊 Visualizations: Tire wear, traffic, fuel, grip, temperature
-- 🌧️ Probabilistic Rain Forecasts by lap range & chance %
-- 🛞 Tire Compounds: Soft, Medium, Hard, Intermediate, Wet
-- 🚨 Dynamic Events: Safety Cars, VSCs, Crashes
-- 🧠 Driver Profiles: Aggressive, Balanced, Conservative
-- 🛠️ Custom Strategy Mode: Pick your own pit stops
-- 📈 ML Lap Time Predictor: Trained with XGBoost
-- 🧾 PDF Race Summary Reports for download
-- 🧠 Strategic Timeline with emoji markers:
-- 🅿️ Pit Stop
-- 🌧️ Rain
-- ⚠️ Safety Car
+The primary reward is the **negative of the lap time**. Agents aim to maximize this cumulative reward, which is equivalent to **minimizing the total race time**. Bonuses from driver profiles are also factored in.
 
 ---
 
-## 📦 Install & Run
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.10 or newer
+- `pip` for package installation
+
+### Installation
+
+1. **Clone the repository:**
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the training script
-python3 main.py
-
-# Launch the Streamlit simulator
-streamlit run streamlit_app.py
+git clone https://github.com/rembertdesigns/pit-stop-simulator.git
+cd pit-stop-simulator
 ```
-
----
-
-## 🛠️ Roadmap
-
-- Visualize pit stop decisions (lap heatmaps)
-- Add multiple tire compounds
-- Introduce safety car periods or weather
-- Switch to PPO (for continuous observations)
-- Add real-time event adaptation
-- Support persistent driver learning and history tracking
-- Enable full race replay controls
-
- ---
- 
-## 📄 License
-
-MIT — use, modify, and share freely.
-
----
-
-🙌 Credits
-
-Built with:
-
-- SimPy
-- OpenAI Gym
-- NumPy
-- Matplotlib
