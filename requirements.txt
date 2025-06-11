@@ -9,6 +9,7 @@ fpdf2 # For PDF generation (provides FPDF)
 gymnasium # The updated OpenAI Gym standard
 stable-baselines3[extra]
 torch # Dependency for stable-baselines3 PyTorch policies
+huggingface-hub
 
 # Optional - keep if you are using them elsewhere:
 # seaborn
