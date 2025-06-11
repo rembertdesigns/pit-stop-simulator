@@ -76,35 +76,42 @@ A rich, interactive UI to:
 
 ---
 
+## 🤗 Model Hosting on Hugging Face
+To ensure the repository remains lightweight and accessible, all trained models, agents, and large data files are hosted on Hugging Face Hub, not directly in this GitHub repository. The Streamlit application automatically downloads these required assets on its first run.
+
+Check out the models here: [Richard1224/pit-stop-simulator-models](https://huggingface.co/Richard1224/pit-stop-simulator-models)
+
+---
+
 ## 🧱 Project Structure
 ```bash
 pit-stop-simulator/
 │
-├── streamlit_app.py         # Main Streamlit application: UI and simulation logic
+├── streamlit_app.py          # Main Streamlit application: UI and simulation logic
 │
 ├── env/
-│   └── gym_race_env.py      # Custom Gymnasium F1 race simulation environment
+│   └── gym_race_env.py       # Custom Gymnasium F1 race simulation environment
 │
 ├── rl/
-│   └── q_learning_agent.py  # Q-learning agent implementation
+│   └── q_learning_agent.py   # Q-learning agent implementation
 │
-├── models/                  # (Gitignored) Directory for trained models
-│   ├── ppo_pit_stop.zip     
+├── models/                   # (Gitignored) Populated by the app on first run
+│   ├── ppo_pit_stop.zip      
 │   └── lap_time_predictor.pkl
 │
-├── saved_agents/            # (Gitignored) Directory for saved Q-learning agent Q-tables
+├── saved_agents/             # (Gitignored) Populated by the app on first run
 │   └── e.g., Ferrari_Balanced_q.pkl
 │
-├── train_ppo.py             # Script to train the PPO agent
-├── train_lap_model.py       # Script to train the ML lap time predictor model
-├── main.py                  # Script for batch-training Q-Learning agents
-├── ppo_eval.py              # Example script to evaluate a trained PPO agent
+├── train_ppo.py              # Script to train the PPO agent
+├── train_lap_model.py        # Script to train the ML lap time predictor model
+├── main.py                   # Script for batch-training Q-Learning agents
+├── ppo_eval.py               # Example script to evaluate a trained PPO agent
 │
-├── logs/
-│   └── gym_race_lap_data.csv # Detailed lap-by-lap log data from simulations
+├── logs/                     # (Gitignored) Populated by running simulations
+│   └── gym_race_lap_data.csv 
 │
-├── requirements.txt         # Python package dependencies
-└── README.md                # This file
+├── requirements.txt          # Python package dependencies
+└── README.md                 # This file
 ```
 ---
 
