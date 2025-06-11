@@ -1,6 +1,7 @@
+# --- Core Streamlit and Data Science Imports ---
 import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import os
@@ -12,13 +13,93 @@ import plotly.express as px
 import plotly.graph_objects as go
 import random
 
-# Assuming these custom modules are in the correct path and are updated
-from env.gym_race_env import PitStopEnv 
-from rl.q_learning_agent import QAgent 
-from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv
+# --- Hugging Face Model Downloader Import ---
+from huggingface_hub import hf_hub_download
 
+# --- Page Configuration (MUST BE THE FIRST STREAMLIT COMMAND) ---
 st.set_page_config(page_title="F1 Strategy Simulator", layout="wide")
+
+# --- HUGGING FACE MODEL DOWNLOADER ---
+# This section runs once at the beginning to ensure all models are available.
+
+@st.cache_resource # Cache the download so it doesn't run every time
+def download_models_from_hf():
+    """
+    Downloads all necessary model files from a Hugging Face Hub repo.
+    """
+    # Your Hugging Face repository ID
+    HF_REPO_ID = "Richard1224/pit-stop-simulator-models"
+
+    # A dictionary of remote filenames and their local destination paths
+    files_to_download = {
+        # PPO Model and data
+        "ppo_pit_stop.zip": "models/ppo_pit_stop.zip",
+        "ppo_rewards.npy": "data/ppo_rewards.npy",
+
+        # ML Predictor
+        "lap_time_predictor.pkl": "models/lap_time_predictor.pkl",
+
+        # Q-Agents
+        "Aston Martin_Aggressive_q.pkl": "saved_agents/Aston Martin_Aggressive_q.pkl",
+        "Aston Martin_Balanced_q.pkl": "saved_agents/Aston Martin_Balanced_q.pkl",
+        "Aston Martin_Conservative_q.pkl": "saved_agents/Aston Martin_Conservative_q.pkl",
+        "Ferrari_Aggressive_q.pkl": "saved_agents/Ferrari_Aggressive_q.pkl",
+        "Ferrari_Balanced_q.pkl": "saved_agents/Ferrari_Balanced_q.pkl",
+        "Ferrari_Conservative_q.pkl": "saved_agents/Ferrari_Conservative_q.pkl",
+        "McLaren_Aggressive_q.pkl": "saved_agents/McLaren_Aggressive_q.pkl",
+        "McLaren_Balanced_q.pkl": "saved_agents/McLaren_Balanced_q.pkl",
+        "McLaren_Conservative_q.pkl": "saved_agents/McLaren_Conservative_q.pkl",
+        "Mercedes_Aggressive_q.pkl": "saved_agents/Mercedes_Aggressive_q.pkl",
+        "Mercedes_Balanced_q.pkl": "saved_agents/Mercedes_Balanced_q.pkl",
+        "Mercedes_Conservative_q.pkl": "saved_agents/Mercedes_Conservative_q.pkl",
+        "Red Bull_Aggressive_q.pkl": "saved_agents/Red Bull_Aggressive_q.pkl",
+        "Red Bull_Balanced_q.pkl": "saved_agents/Red Bull_Balanced_q.pkl",
+        "Red Bull_Conservative_q.pkl": "saved_agents/Red Bull_Conservative_q.pkl",
+    }
+
+    # Create local directories
+    local_dirs = set(os.path.dirname(path) for path in files_to_download.values())
+    for d in local_dirs:
+        os.makedirs(d, exist_ok=True)
+
+    # Download each file
+    st.info("Downloading simulation models. This may take a moment on first startup...")
+    progress_bar = st.progress(0)
+    total_files = len(files_to_download)
+
+    for i, (remote_filename, local_path) in enumerate(files_to_download.items()):
+        if not os.path.exists(local_path):
+            try:
+                hf_hub_download(
+                    repo_id=HF_REPO_ID,
+                    filename=remote_filename,
+                    local_dir=os.path.dirname(local_path),
+                    local_dir_use_symlinks=False
+                )
+                downloaded_file = os.path.join(os.path.dirname(local_path), os.path.basename(remote_filename))
+                if downloaded_file != local_path:
+                     os.rename(downloaded_file, local_path)
+            except Exception as e:
+                st.error(f"Error downloading {remote_filename}: {e}")
+                return False # Stop if a model fails to download
+        
+        progress_bar.progress((i + 1) / total_files)
+
+    st.success("All models downloaded successfully!")
+    time.sleep(1) # Give user a moment to see the success message
+    progress_bar.empty()
+    return True
+
+# Run the downloader at the start of the app
+models_ready = download_models_from_hf()
+
+# THE REST OF YOUR APPLICATION RUNS ONLY IF MODELS ARE READY
+if models_ready:
+    # --- Custom Modules (should be loaded after models are confirmed to exist) ---
+    from env.gym_race_env import PitStopEnv
+    from rl.q_learning_agent import QAgent
+    from stable_baselines3 import PPO
+    from stable_baselines3.common.vec_env import DummyVecEnv
 
 # --- Initialize Session State Variables ---
 if "weekend_phase" not in st.session_state:
