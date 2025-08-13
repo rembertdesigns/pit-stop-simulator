@@ -131,3 +131,76 @@ This creates `models/ppo_pit_stop.zip` for advanced RL strategies.
 streamlit run streamlit_app.py
 ```
 Open your browser to http://localhost:8501 and start simulating!
+
+---
+
+## 📁 Project Structure
+```
+pit-stop-simulator/
+│
+├── streamlit_app.py              # 🖥️  Main web application with full UI
+│
+├── env/
+│   └── gym_race_env.py           # 🏁 Custom F1 race environment (Gymnasium)
+│
+├── rl/
+│   └── q_learning_agent.py       # 🧠 Q-Learning agent implementation
+│
+├── train_ppo.py                  # 🚂 PPO agent training script
+├── train_lap_model.py            # 📈 ML lap time predictor training
+├── main.py                       # 🎯 Batch Q-Learning agent training
+├── ppo_eval.py                   # 📊 PPO agent evaluation script
+│
+├── models/                       # 🤖 (Auto-downloaded) Trained models
+├── saved_agents/                 # 💾 (Auto-generated) Q-Learning agents
+├── logs/                         # 📝 (Auto-generated) Simulation data
+│
+├── requirements.txt              # 📦 Python dependencies
+└── README.md                     # 📚 This documentation
+```
+
+---
+
+## 🎮 How to Use
+
+### Basic Simulation
+
+1. **Select Strategy:** Choose between Q-Learning, PPO, or Custom pit strategies
+2. **Configure Race:** Set laps (20-80), select track, and choose team/driver profile
+3. **Add Events:** Configure rain forecasts, Safety Car deployments
+4. **Run Simulation:** Watch real-time animated lap metrics and strategic decisions
+5. **Analyze Results:** Review lap time deltas, tire usage, and ML predictions
+
+### Advanced Analysis
+
+- **Head-to-Head Mode:** Direct comparison between Q-Learning and PPO agents
+- **Statistical Comparison:** Run 10-100 races per strategy to compare performance distributions
+- **Full Weekend:** Experience Practice → Qualifying → Race progression
+- **Custom Strategies:** Define manual pit stop laps to test specific approaches
+
+### Understanding the Agents
+**Q-Learning Agent:**
+
+- Uses tabular learning with discretized state space
+- Buckets: (laps, tire_wear, traffic, rain, safety_car, vsc)
+- Action space: 0=Stay Out, 1=Pit (with tire selection logic)
+- Best for: Consistent, learned patterns based on discrete state combinations
+
+**PPO Agent:**
+
+- Neural network-based continuous learning
+- Observation space: 7-dimensional (lap, tire_wear, traffic, fuel, rain, sc, vsc)
+- Action space: 6 actions (Stay Out, Pit for Soft/Medium/Hard/Intermediate/Wet)
+- Best for: Complex pattern recognition and nuanced decision-making
+
+---
+
+## 🔧 Advanced Configuration
+
+### Custom Track Creation
+Set `Track: Custom` in the sidebar to define:
+
+- **Pit Stop Time:** Base time penalty (20-40s)
+- **Track Abrasiveness:** Tire wear multiplier (0.5-2.5x)
+- **Traffic Penalty:** Time lost in traffic (1.0-10.0s)
+- **Base Lap Time:** Ideal dry conditions pace (60-120s)
