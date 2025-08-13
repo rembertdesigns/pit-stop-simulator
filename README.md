@@ -226,3 +226,14 @@ Set `Track: Custom` in the sidebar to define:
 - **Tire Wear Patterns:** Degradation curves showing optimal pit windows
 - **Traffic Impact:** Effect of other cars on lap time performance
 - **FIA Penalties:** Automatic penalties for regulation violations (e.g., not using 2 compounds in dry races)
+
+---
+
+### 🛣️ Roadmap & Future Enhancements
+
+- [ ] **Multi-Agent Racing:** Simulate full grids with competing AI strategies
+- [ ] **What-If Analysis:** Replay races with modified decisions to see impact
+- [ ] **Advanced Driver Models:** Skill-based performance variation and errors
+- [ ] **Real-Time Strategy Updates:** Mid-race strategy adjustments based on conditions
+- [ ] **Enhanced ML Models:** Deep learning for more sophisticated lap time prediction
+- [ ] **Championship Mode:** Season-long strategy optimization across multiple races
