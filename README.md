@@ -83,26 +83,52 @@ The project combines **Q-Learning** and **Proximal Policy Optimization (PPO)** a
 
 ### Quick Setup
 1. **Clone the Repository**
+```
+git clone https://github.com/rembertdesigns/pit-stop-simulator.git
+cd pit-stop-simulator
+```
 2. **Create Virtual Environment** (Recommended)
+```
+python3 -m venv venv
+source venv/bin/activate  # On macOS/Linux
+# On Windows: venv\Scripts\activate
+```
 3. **Install Dependencies**
+```
+pip install -r requirements.txt
+```
 
 ---
 
 ### Training Your Models  
 ⚠️ **Important**: You must train the models yourself — they are not provided.
 
-1. **Generate Initial Data**  
-   Run 2–3 simulated races to populate `logs/gym_race_lap_data.csv`.
+1. **Generate Initial Data**
+```
+streamlit run streamlit_app.py
+```
+Navigate to the app and run 2-3 race simulations to generate initial data in `logs/gym_race_lap_data.csv`.
 
-2. **Train Lap Time Predictor**  
-   Produces `models/lap_time_predictor.pkl`.
+2. **Train Lap Time Predictor**
+```
+python train_lap_model.py
+```
+This creates `models/lap_time_predictor.pkl` for ML insights.
 
-3. **Train Q-Learning Agents**  
-   Saves trained agents to `/saved_agents/`.
+3. **Train Q-Learning Agents**
+```
+python main.py
+```
+This trains agents for all team/profile combinations and saves them to `saved_agents/`.
 
-4. **Train PPO Agent**  
-   Produces `models/ppo_pit_stop.zip`.
-
----
+4. **Train PPO Agent**
+```
+python train_ppo.py
+```
+This creates `models/ppo_pit_stop.zip` for advanced RL strategies.
 
 ### Launch the Simulator
+```
+streamlit run streamlit_app.py
+```
+Open your browser to http://localhost:8501 and start simulating!
