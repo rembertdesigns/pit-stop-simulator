@@ -237,3 +237,37 @@ Set `Track: Custom` in the sidebar to define:
 - [ ] **Real-Time Strategy Updates:** Mid-race strategy adjustments based on conditions
 - [ ] **Enhanced ML Models:** Deep learning for more sophisticated lap time prediction
 - [ ] **Championship Mode:** Season-long strategy optimization across multiple races
+
+---
+
+## 🔗 Model Repository
+All trained models are hosted on [Hugging Face Hub: **Richard1224/pit-stop-simulator-models**](https://huggingface.co/Richard1224/pit-stop-simulator-models)  
+
+The application automatically downloads required models on first startup.
+
+---
+
+## 📄 License
+This project is licensed under the **MIT License** — see the LICENSE file for details.
+
+---
+
+## 🙌 Contributing
+Contributions are welcome!  
+Key areas for improvement:
+- New track configurations and realistic data  
+- Enhanced AI agent architectures  
+- Additional race event types (VSC variations, red flags)  
+- Performance optimizations for large-scale simulations  
+
+---
+
+## 🏆 Acknowledgments
+Built with love for Formula 1 and powered by:
+- **Streamlit** — Making data apps accessible  
+- **Stable Baselines3** — State-of-the-art RL implementations  
+- **Gymnasium** — Modern RL environment framework  
+- **Plotly** — Beautiful interactive visualizations  
+- **Scikit-learn** — Reliable machine learning tools
+
+Inspired by the strategic complexity and split-second decisions that make Formula 1 the pinnacle of motorsport. 🏁
