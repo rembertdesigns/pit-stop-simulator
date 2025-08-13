@@ -1,8 +1,7 @@
 # 🏎️ F1 Pit Stop Strategy Simulator
 [**Launch Simulator**](https://pit-stop-sim.streamlit.app/)
 
-An advanced, interactive Formula 1 pit stop strategy simulator that uses **Reinforcement Learning** and **Machine Learning** to optimize race strategies.  
-This project demonstrates how AI agents can learn optimal pit stop timing and tire compound selection through dynamic race simulations.
+An advanced, interactive Formula 1 pit stop strategy simulator that uses **Reinforcement Learning** and **Machine Learning** to optimize race strategies. This project demonstrates how AI agents can learn optimal pit stop timing and tire compound selection through dynamic race simulations.
 
 ---
 
@@ -52,25 +51,25 @@ The project combines **Q-Learning** and **Proximal Policy Optimization (PPO)** a
 ## 🛠️ Technology Stack
 
 **Core Simulation**
-- Python 3.10+  
-- Gymnasium  
-- NumPy & Pandas  
+- **Python 3.10+** - Primary development language
+- **Gymnasium** - RL environment framework for race simulation  
+- **NumPy & Pandas** - Data processing and analysis 
 
 **Machine Learning & AI**
-- Custom Q-Learning (Tabular)  
-- Stable Baselines3 (PPO)  
-- PyTorch  
-- Scikit-learn (RandomForestRegressor)
+- **Custom Q-Learning**  - Tabular reinforcement learning implementation
+- **Stable Baselines3**  - PPO agent training and inference
+- **PyTorch** - Backend for deep RL models 
+- **Scikit-learn** - Lap time prediction model (RandomForestRegressor)
 
 **User Interface & Visualization**
-- Streamlit  
-- Plotly  
-- Matplotlib & Seaborn
+- **Streamlit** - Interactive web application framework  
+- **Plotly** - Advanced interactive charts and animations  
+- **Matplotlib & Seaborn**  - Statistical visualization and analysis
 
 **Model Management**
-- Hugging Face Hub  
-- Joblib  
-- FPDF2  
+- **Hugging Face Hub** - Centralized model storage and distribution  
+- **Joblib** - Model serialization and loading  
+- **FPDF2** - Automated race report generation  
 
 ---
 
