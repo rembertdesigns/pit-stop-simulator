@@ -204,3 +204,25 @@ Set `Track: Custom` in the sidebar to define:
 - **Track Abrasiveness:** Tire wear multiplier (0.5-2.5x)
 - **Traffic Penalty:** Time lost in traffic (1.0-10.0s)
 - **Base Lap Time:** Ideal dry conditions pace (60-120s)
+
+### Driver Profile Effects
+
+- **Aggressive:** Higher tire wear tolerance (75%), faster pace, +15% tire wear
+- **Balanced:** Standard thresholds (65% wear), neutral bonuses
+- **Conservative:** Early pit strategy (55% wear), cautious approach, -15% tire wear
+
+### Weather Simulation
+
+- **Probabilistic Forecasts:** Define lap ranges with rain probability percentages
+- **Dynamic Intensity:** Rain strength affects lap times and tire wear
+- **Tire Strategy:** Wet conditions favor Intermediate/Wet tire compounds
+
+---
+
+## 📊 Key Metrics Explained
+
+- **Total Reward:** Cumulative lap time performance (higher = better overall race time)
+- **Pit Efficiency:** Estimated time optimization from pit strategy decisions
+- **Tire Wear Patterns:** Degradation curves showing optimal pit windows
+- **Traffic Impact:** Effect of other cars on lap time performance
+- **FIA Penalties:** Automatic penalties for regulation violations (e.g., not using 2 compounds in dry races)
