@@ -1,9 +1,14 @@
 # 🏎️ F1 Pit Stop Strategy Simulator
 [**Launch Simulator**](https://pit-stop-sim.streamlit.app/)
 
-<img width="1536" height="1024" 
-     alt="F1 Pit Stop Strategy Simulator - AI-powered Formula 1 race strategy optimization tool with reinforcement learning for tire management and pit timing decisions" 
-     src="https://github.com/user-attachments/assets/f61b6403-1633-4b13-83ab-ccdff35568dd" />
+<img 
+  width="1536" 
+  height="1024" 
+  alt="F1 Pit Stop Strategy Simulator - AI-powered Formula 1 race strategy optimization tool with reinforcement learning for tire management and pit timing decisions" 
+  title="F1 Pit Stop Strategy Simulator - AI Formula 1 Race Strategy Optimization Tool"
+  src="https://github.com/user-attachments/assets/f61b6403-1633-4b13-83ab-ccdff35568dd"
+  loading="lazy"
+/>
 
 An advanced, interactive Formula 1 pit stop strategy simulator that uses **Reinforcement Learning** and **Machine Learning** to optimize race strategies. This project demonstrates how AI agents can learn optimal pit stop timing and tire compound selection through dynamic race simulations.
 
