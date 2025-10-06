@@ -10,7 +10,7 @@
   loading="lazy"
 />
 
-An advanced, interactive Formula 1 pit stop strategy simulator that uses **Reinforcement Learning** and **Machine Learning** to optimize race strategies. This project demonstrates how AI agents can learn optimal pit stop timing and tire compound selection through dynamic race simulations.
+An advanced, interactive Formula 1 pit stop strategy simulator leveraging **Reinforcement Learning** and **Machine Learning** to optimize race strategies through dynamic simulation. This project demonstrates AI-driven decision-making for pit stop timing and tire compound selection in realistic race environments.
 
 ---
 
