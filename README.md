@@ -57,6 +57,54 @@ This simulator creates a high-fidelity F1 race environment where AI agents learn
   - Fuel consumption effects on lap times (~0.03s per kg)
   - FIA regulation compliance (mandatory compound usage)
 
+  ---
+
+## 🧠 Core Innovation
+
+### Dual-Agent Architecture
+
+The project implements two complementary reinforcement learning approaches:
+
+1. **Q-Learning Agent**
+   - **Algorithm:** Tabular Q-Learning with discretized state space
+   - **State Space Discretization:**
+```python
+State = (
+    lap_bucket,           # 0-3 (race phase)
+    tire_wear_bucket,     # 0-9 (0-100% in 10% increments)
+    traffic_bucket,       # 0-2 (low/medium/high)
+    rain_status,          # 0-1 (binary)
+    safety_car_status,    # 0-1 (binary)
+    vsc_status           # 0-1 (binary)
+)
+```
+**Action Space:** 6 discrete actions
+
+- **Action 0:** Stay out (no pit)
+- **Actions 1-5:** Pit for specific compound (Soft / Medium / Hard / Intermediate / Wet)
+
+**Learning Parameters:**
+
+- **Learning rate (α):** 0.1
+- **Discount factor (γ):** 0.99
+- **Epsilon-greedy exploration:** ε = 1.0 → 0.01 (decay over 2000 episodes)
+
+2. **PPO Agent (Proximal Policy Optimization)**
+  - Framework: Stable-Baselines3 implementation
+  - Observation Space: 7-dimensional continuous vector
+```python
+obs = [
+    current_lap / total_laps,        # Normalized race progress
+    tire_wear / 100.0,               # Normalized tire condition
+    traffic,                         # Traffic intensity [0, 1]
+    fuel_weight / initial_fuel,      # Normalized fuel load
+    rain_intensity,                  # Rain strength [0, 1]
+    safety_car_active,               # Binary flag
+    vsc_active                       # Binary flag
+]
+```
+
+
 
 
 ## 🔗 Model Repository
