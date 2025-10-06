@@ -204,6 +204,42 @@ obs = [
 | **NumPy**          | 1.24+    | Numerical computing            |
 | **Pandas**         | 2.0+     | Data manipulation              |
 
+---
+
+## 🚀 Installation
+
+### Prerequisites
+- Python 3.10 or newer  
+- Git  
+- ~2GB disk space for models and dependencies  
+- 4GB+ RAM recommended for PPO training  
+
+### Quick Setup
+1. **Clone Repository**
+```bash
+git clone https://github.com/rembertdesigns/pit-stop-simulator.git
+cd pit-stop-simulator
+```
+2. **Create Virtual Environment** (Recommended)
+```bash
+# macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
+```
+3. **Install Dependencies**
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+4. **Verify Installation**
+```bash
+python -c "import streamlit; import gymnasium; import stable_baselines3; print('✅ All dependencies installed')"
+```
+
 
 ## 🔗 Model Repository
 All trained models are hosted on [Hugging Face Hub: **Richard1224/pit-stop-simulator-models**](https://huggingface.co/Richard1224/pit-stop-simulator-models)  
