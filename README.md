@@ -103,7 +103,60 @@ obs = [
     vsc_active                       # Binary flag
 ]
 ```
+**Network Architecture**
 
+- Policy Network: MLP with 2 hidden layers (64 neurons each)
+- Value Network: Shared feature extraction  
+- Activation: Tanh
+
+**Training Hyperparameters**
+
+- Total timesteps: 300,000  
+- Batch size: 64  
+- Learning rate: 2.5e-4  
+- GAE λ: 0.95  
+- Clip range: 0.2
+
+---
+
+## ✨ Key Features
+
+### 🤖 AI Strategy Agents
+
+**Q-Learning Agent**
+- Fast inference (~0.1ms per decision)  
+- Interpretable state-action mappings  
+- Optimal for discrete, well-defined scenarios  
+- 15 agents (5 teams × 3 driver profiles)
+
+**PPO Agent**
+- Continuous learning capability  
+- Superior generalization to novel conditions  
+- Neural network-based policy approximation  
+- Single model handles all team/profile combinations
+
+**Performance Comparison**
+- Head-to-Head mode for direct agent comparison  
+- Statistical analysis over 100+ race simulations  
+- Distribution plots for race time and pit stop counts
+
+### Race Simulation Engine
+
+**Session Types**
+1. **Practice:** 3 stints × 3 laps, random tire compounds  
+2. **Qualifying:** 3 flying laps, best time recording  
+3. **Race:** Full distance with strategic pit stops  
+4. **Full Weekend:** Complete P → Q → R progression  
+5. **Statistical Comparison:** Batch simulations (10–100 runs)
+
+**Circuit Library:** 9 Pre-Configured Tracks
+| Track       | Pit Time | Wear Rate | Traffic | Base Lap |
+|--------------|-----------|-----------|----------|-----------|
+| Monza        | 28s       | 1.1x      | 3.0s     | 80.0s     |
+| Spa          | 32s       | 1.2x      | 4.0s     | 105.0s    |
+| Monaco       | 25s       | 1.4x      | 7.5s     | 71.0s     |
+| Bahrain      | 30s       | 2.0x      | 5.0s     | 92.0s     |
+| Silverstone  | 29s       | 1.8x      | 4.5s     | 88.0s     |
 
 
 
