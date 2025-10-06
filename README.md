@@ -158,6 +158,31 @@ obs = [
 | Bahrain      | 30s       | 2.0x      | 5.0s     | 92.0s     |
 | Silverstone  | 29s       | 1.8x      | 4.5s     | 88.0s     |
 
+### 📊 Analytics Dashboard
+**Real-Time Visualizations** (Plotly-powered)
+- Animated lap-by-lap metrics with **0.001–0.5s replay speed**  
+- Tire wear progression with **rolling average smoothing**  
+- **Traffic intensity heatmaps**  
+- **Fuel consumption curves**
+
+**Post-Race Analysis**
+- **Lap time delta charts** (vs. first valid lap baseline)  
+- **Strategic event timeline** with emoji markers (🅿️ 🌧️ ⚠️ 🚦)  
+- **Tire compound usage distribution**  
+- **Track temperature and grip factor evolution**
+
+**ML Insights**
+- **RandomForest lap time predictions** vs. actual performance  
+- **Feature importance rankings**  
+- **Prediction error analysis** (RMSE, R²)
+
+### 🧠 Machine Learning Pipeline
+**Lap Time Predictor**
+- **Model:** `RandomForestRegressor (150 trees)`  
+- **Features:** 14 inputs (7 numeric + 5 tire compound dummies + 2 boolean)  
+- **Training data:** Aggregated from simulation logs  
+- **Typical performance:** R² > 0.85, RMSE < 2.0s
+
 
 
 ## 🔗 Model Repository
