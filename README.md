@@ -183,6 +183,26 @@ obs = [
 - **Training data:** Aggregated from simulation logs  
 - **Typical performance:** R² > 0.85, RMSE < 2.0s
 
+---
+
+## 🛠️ Technical Architecture
+
+### Technology Stack
+<img width="421" height="433" alt="Screenshot 2025-10-06 at 2 39 09 PM" src="https://github.com/user-attachments/assets/24571e4c-2d1b-4934-bcfc-1597e2fb8fa6" />
+
+### Core Dependencies
+
+| Package           | Version | Purpose                        |
+|--------------------|----------|--------------------------------|
+| **Python**         | 3.10+    | Base runtime                   |
+| **Streamlit**      | 1.28+    | Web application framework      |
+| **Gymnasium**      | 0.29+    | RL environment standard        |
+| **Stable-Baselines3** | 2.1+ | PPO implementation             |
+| **PyTorch**        | 2.0+     | Deep learning backend          |
+| **Scikit-learn**   | 1.3+     | ML predictor model             |
+| **Plotly**         | 5.17+    | Interactive visualizations     |
+| **NumPy**          | 1.24+    | Numerical computing            |
+| **Pandas**         | 2.0+     | Data manipulation              |
 
 
 ## 🔗 Model Repository
