@@ -587,6 +587,24 @@ Pit Efficiency = 100 × (1 - (pit_stops × pit_time) / total_race_time)
 - [ ] Car development progression
 - [ ] Strategic resource allocation (tire allocation)
 
+---
+
+## 🔗 External Resources
+
+### Model Repository
+All trained models hosted on [Hugging Face Hub](https://huggingface.co/Richard1224/pit-stop-simulator-models)
+
+**Automatic Download**: Models are fetched on first app launch via `download_models_from_hf()` function.
+
+**Manual Download** (if needed):
+```bash
+huggingface-cli download Richard1224/pit-stop-simulator-models --local-dir ./
+```
+### Documentation
+- **Stable-Baselines3**: [RL algorithms documentation](https://stable-baselines3.readthedocs.io/)
+- **Gymnasium**: [Environment API reference](https://gymnasium.farama.org/)
+- **Streamlit**: [Component library](https://docs.streamlit.io/)
+
 
 
 
