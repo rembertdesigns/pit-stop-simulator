@@ -410,6 +410,75 @@ Experience P → Q → R progression:
 
 ---
 
+## 📁 Project Structure
+```bash
+pit-stop-simulator/
+│
+├── streamlit_app.py              # 🖥️  Main web application (3500+ lines)
+│   ├── Model downloader (Hugging Face Hub)
+│   ├── Simulation orchestration
+│   ├── Plotly visualizations
+│   └── PDF report generation
+│
+├── env/
+│   └── gym_race_env.py           # 🏁 Gymnasium-compliant F1 environment
+│       ├── State space definition
+│       ├── Reward function (lap time + penalties)
+│       ├── Weather/SC/VSC logic
+│       └── Tire/fuel degradation models
+│
+├── rl/
+│   └── q_learning_agent.py       # 🧠 Tabular Q-Learning implementation
+│       ├── State discretization (6D → buckets)
+│       ├── Epsilon-greedy exploration
+│       └── Q-table updates (Bellman equation)
+│
+├── train_ppo.py                  # 🚂 PPO agent training script
+│   ├── Vectorized environment setup
+│   ├── Hyperparameter configuration
+│   ├── Checkpoint/eval callbacks
+│   └── TensorBoard logging
+│
+├── train_lap_model.py            # 📈 ML lap time predictor training
+│   ├── CSV data loading/preprocessing
+│   ├── RandomForest training
+│   ├── Feature engineering (one-hot encoding)
+│   └── Model evaluation (RMSE, R²)
+│
+├── main.py                       # 🎯 Batch Q-Learning agent training
+│   ├── Multi-agent training loop (15 agents)
+│   ├── Progress tracking (tqdm)
+│   ├── Training visualization (rewards, heatmaps)
+│   └── Agent persistence (pickle)
+│
+├── ppo_eval.py                   # 📊 PPO agent evaluation script
+│   ├── Deterministic policy rollouts
+│   ├── Detailed lap-by-lap logging
+│   └── Episode statistics
+│
+├── models/                       # 🤖 Trained models (auto-downloaded from HF Hub)
+│   ├── ppo_pit_stop.zip          # PPO neural network policy
+│   └── lap_time_predictor.pkl    # RandomForest regressor
+│
+├── saved_agents/                 # 💾 Q-Learning agents (15 .pkl files)
+│   ├── Ferrari_Aggressive_q.pkl
+│   ├── Mercedes_Balanced_q.pkl
+│   └── ... (13 more combinations)
+│
+├── logs/                         # 📝 Simulation data (auto-generated)
+│   └── gym_race_lap_data.csv     # Lap-by-lap race logs
+│
+├── training_figures/             # 📊 Training visualizations (auto-generated)
+│   ├── rewards_{Team}_{Profile}.png
+│   └── heatmap_{Team}_{Profile}.png
+│
+├── requirements.txt              # 📦 Python dependencies
+├── README.md                     # 📚 This documentation
+└── LICENSE                       # ⚖️  MIT License
+```
+
+---
+
 
 
 
