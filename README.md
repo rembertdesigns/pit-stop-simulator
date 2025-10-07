@@ -250,6 +250,111 @@ Pre-trained models are **not included** in the repository. You must train them y
 ```bash
 1. Generate Data → 2. Train ML Predictor → 3. Train Q-Agents → 4. Train PPO Agent
 ```
+### Step 1: Generate Initial Data
+
+Run 2-3 race simulations to create training data:
+```bash
+streamlit run streamlit_app.py
+```
+**Action Items**:
+- Navigate to the app (http://localhost:8501)
+- Configure race settings (50+ laps recommended)
+- Run simulations with varied conditions (rain, SC, different tracks)
+- Verify `logs/gym_race_lap_data.csv` contains data (should have 100+ rows)
+
+### Step 2: Train Lap Time Predictor
+```bash
+python train_lap_model.py
+```
+**What This Does**:
+- Loads data from `logs/gym_race_lap_data.csv`
+- Preprocesses features (one-hot encoding, normalization)
+- Trains RandomForestRegressor
+- Saves model to `models/lap_time_predictor.pkl`
+- Prints evaluation metrics (RMSE, R², feature importances)
+
+**Expected Output**:
+```bash
+Training set size: 800 samples, Test set size: 200 samples
+Training RandomForestRegressor model with 14 features...
+Model training complete.
+
+--- Model Evaluation on Test Set ---
+  Root Mean Squared Error (RMSE): 1.847
+  R-squared (R2 Score):           0.891
+
+✅ Model retrained and saved to: models/lap_time_predictor.pkl
+```
+### Step 3: Train Q-Learning Agents
+```
+python main.py
+```
+**Configuration** (in `main.py`):
+```python
+TEAMS_TO_TRAIN = ["Ferrari", "Red Bull", "Mercedes", "McLaren", "Aston Martin"]
+PROFILES_TO_TRAIN = ["Aggressive", "Balanced", "Conservative"]
+TRAINING_EPISODES = 2000
+```
+**What This Does**:
+- Creates 15 agents (5 teams × 3 profiles)
+- Trains each agent for 2000 episodes (~30 min on modern CPU)
+- Saves agents to `saved_agents/{Team}_{Profile}_q.pkl`
+- Generates training plots in `training_figures/`
+
+**Expected Output** (per agent):
+```bash
+--- Initializing training for: Ferrari - Aggressive ---
+Training Ferrari Aggressive: 100%|████████| 2000/2000 [05:42<00:00, 5.84it/s]
+--- Training for Ferrari - Aggressive complete ---
+✅ Agent successfully saved to: saved_agents/Ferrari_Aggressive_q.pkl
+```
+### Step 4: Train PPO Agent
+```bash
+python train_ppo.py
+```
+**What This Does**:
+- Creates vectorized training environment
+- Trains PPO agent for 300,000 timesteps (~2-3 hours on CPU, ~30 min on GPU)
+- Saves checkpoints every 10,000 steps
+- Evaluates and saves best model
+- Final model saved to `models/ppo_pit_stop.zip`
+
+**Expected Output**:
+```bash
+Creating training environment...
+PPO Model Created. Observation Space: Box(7,), Action Space: Discrete(6)
+Starting PPO training for 300000 timesteps...
+---------------------------------
+| rollout/           |          |
+|    ep_len_mean     | 58.0     |
+|    ep_rew_mean     | -5247.32 |
+| time/              |          |
+|    fps             | 1247     |
+|    iterations      | 146      |
+|    time_elapsed    | 240      |
+|    total_timesteps | 299008   |
+...
+✅ Training complete. Final model saved to: models/ppo_pit_stop.zip
+```
+### Verifying Training Success
+
+After training, verify all models exist:
+```bash
+ls -lh models/
+# Should show:
+# lap_time_predictor.pkl
+# ppo_pit_stop.zip
+
+ls -lh saved_agents/
+# Should show 15 .pkl files for Q-agents
+```
+
+
+
+
+
+
+
 
 ## 🔗 Model Repository
 All trained models are hosted on [Hugging Face Hub: **Richard1224/pit-stop-simulator-models**](https://huggingface.co/Richard1224/pit-stop-simulator-models)  
