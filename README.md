@@ -349,6 +349,66 @@ ls -lh saved_agents/
 # Should show 15 .pkl files for Q-agents
 ```
 
+---
+
+## 📖 Usage Guide
+
+## Launch Application
+```bash
+bashstreamlit run streamlit_app.py
+```
+Access at: `http://localhost:8501`
+
+### Basic Simulation Workflow
+
+1. **Select Strategy** (Sidebar)
+   - Q-Learning: Uses trained Q-table agent
+   - PPO: Uses neural network policy
+   - Custom: Manual pit lap selection
+
+2. **Configure Race Parameters**
+   - Total Laps: 20-80 (default: 58)
+   - Track: Select from 9 circuits or define custom
+   - Team & Driver Profile: Affects pit thresholds and tire wear
+
+3. **Add Race Events** (Optional)
+   - Rain Forecast: Define probability windows
+   - Safety Car: Select specific laps
+   - Initial Tire: Soft/Medium/Hard
+
+4. **Run Simulation**
+   - Click "▶️ Start Simulation"
+   - Watch animated lap metrics
+   - Review post-race analytics
+
+5. **Analyze Results**
+   - Lap time deltas
+   - Strategic event timeline
+   - ML predictions vs. actual
+   - Download PDF report
+
+### Advanced Features
+
+#### Head-to-Head Mode
+Compare Q-Learning vs. PPO directly:
+- Session Type: "Head-to-Head"
+- Side-by-side race visualization
+- Comparative summary table
+
+#### Statistical Comparison
+Robust strategy evaluation:
+- Session Type: "Statistical Comparison"
+- Select 2-3 strategies
+- Configure 10-100 runs per strategy
+- View distribution plots (box plots, histograms)
+
+#### Full Weekend Mode
+Experience P → Q → R progression:
+- Session Type: "Full Weekend"
+- Simulates Practice (9 laps), Qualifying (3 laps), Race (full distance)
+- Carries strategic insights between sessions
+
+---
 
 
 
