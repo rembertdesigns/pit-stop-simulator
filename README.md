@@ -555,7 +555,37 @@ Pit Efficiency = 100 × (1 - (pit_stops × pit_time) / total_race_time)
 
 ---
 
+## 🛣️ Roadmap
 
+### Phase 1: Multi-Agent Racing (Q3 2025)
+- [ ] Implement 20-car grid simulation
+- [ ] Inter-agent competition with overtaking logic
+- [ ] Position-based reward shaping
+- [ ] Qualifying-based grid positions
+
+### Phase 2: Advanced Strategy (Q4 2025)
+- [ ] Dynamic pit strategy updates (mid-race replanning)
+- [ ] "What-If" scenario analysis tool
+- [ ] Tire compound optimizer (pre-race selection)
+- [ ] Undercut/overcut detection system
+
+### Phase 3: Enhanced Realism (Q1 2026)
+- [ ] Red flag handling and race restarts
+- [ ] Driver skill variation (consistency, errors)
+- [ ] Team radio communication simulation
+- [ ] Pit crew performance modeling
+
+### Phase 4: Deep Learning (Q2 2026)
+- [ ] Transformer-based strategy predictor
+- [ ] LSTM for lap time forecasting
+- [ ] Convolutional networks for track layout analysis
+- [ ] Multi-agent reinforcement learning (MARL)
+
+### Phase 5: Championship Mode (Q3 2026)
+- [ ] Full season simulation (23 races)
+- [ ] Points system and standings
+- [ ] Car development progression
+- [ ] Strategic resource allocation (tire allocation)
 
 
 
