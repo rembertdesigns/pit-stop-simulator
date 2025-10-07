@@ -479,6 +479,51 @@ pit-stop-simulator/
 
 ---
 
+## ⚙️ Configuration
+
+### Environment Parameters
+**Track Configuration** (`PitStopEnv` initialization):
+```python
+env = PitStopEnv(
+    total_laps=58,                  # Race distance
+    base_lap_time_seconds=90.0,     # Ideal dry lap time
+    pit_time=28,                    # Pit stop time loss
+    tire_wear_rate_config=1.1,      # Track abrasiveness multiplier
+    traffic_penalty_config=3.0      # Time lost per traffic unit
+)
+```
+### Driver Profile Effects
+
+Profiles modify agent behavior and physics:
+
+| Profile | Pit Threshold | Tire Wear Multiplier | Overtake Bonus |
+|---------|---------------|----------------------|----------------|
+| **Aggressive** | 75% wear | 1.15× (faster degradation) | -0.2s (time gain) |
+| **Balanced** | 65% wear | 1.0× (baseline) | 0.0s (neutral) |
+| **Conservative** | 55% wear | 0.85× (slower degradation) | +0.1s (time loss) |
+
+### Weather System
+
+**Rain Forecast Configuration**:
+```python
+rain_forecast_ranges = [
+    {
+        "start": 15,           # Lap window start
+        "end": 25,             # Lap window end
+        "probability": 0.7,    # 70% chance of rain
+        "intensity": 0.6       # Rain strength (0.0-1.0)
+    }
+]
+```
+**Rain Effects:**
+- Lap time penalty: +5-15s (intensity-dependent)
+- Grip reduction: -30% to -60%
+- Forces Intermediate/Wet tire compound
+
+---
+
+
+
 
 
 
