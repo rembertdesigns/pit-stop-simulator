@@ -239,7 +239,17 @@ pip install -r requirements.txt
 ```bash
 python -c "import streamlit; import gymnasium; import stable_baselines3; print('✅ All dependencies installed')"
 ```
+---
 
+## 🎓 Model Training Pipeline
+
+### ⚠️ Important Notice
+Pre-trained models are **not included** in the repository. You must train them yourself using the provided scripts.
+
+### Training Workflow
+```bash
+1. Generate Data → 2. Train ML Predictor → 3. Train Q-Agents → 4. Train PPO Agent
+```
 
 ## 🔗 Model Repository
 All trained models are hosted on [Hugging Face Hub: **Richard1224/pit-stop-simulator-models**](https://huggingface.co/Richard1224/pit-stop-simulator-models)  
