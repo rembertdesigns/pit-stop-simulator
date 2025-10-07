@@ -605,13 +605,43 @@ huggingface-cli download Richard1224/pit-stop-simulator-models --local-dir ./
 - **Gymnasium**: [Environment API reference](https://gymnasium.farama.org/)
 - **Streamlit**: [Component library](https://docs.streamlit.io/)
 
+---
+
+## 🙌 Contributing
+
+Contributions welcome! Priority areas:
+
+### High-Impact Improvements
+1. **Real F1 Data Integration**: Parse actual race telemetry (F1 API, FastF1 library)
+2. **Additional RL Algorithms**: A3C, SAC, TD3 implementations
+3. **Performance Optimization**: Numba JIT compilation, parallel simulation
+4. **Track Expansion**: Add 2024 F1 calendar circuits with accurate characteristics
+
+### Development Setup
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/pit-stop-simulator.git
+cd pit-stop-simulator
+
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Install dev dependencies
+pip install -r requirements-dev.txt
+
+# Run tests (if implemented)
+pytest tests/
+
+# Submit PR with detailed description
+```
+### Code Standards
+- Follow PEP 8 style guide
+- Add docstrings to new functions
+- Include type hints for function signatures
+- Update README if adding major features
+
+---
 
 
-
-
-
-
-## 🔗 Model Repository
-All trained models are hosted on [Hugging Face Hub: **Richard1224/pit-stop-simulator-models**](https://huggingface.co/Richard1224/pit-stop-simulator-models)  
 
 
