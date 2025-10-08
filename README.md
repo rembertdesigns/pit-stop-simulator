@@ -679,7 +679,7 @@ This project honors the strategic complexity and split-second decisions that def
 
 <div align="center">
 
-**[⬆ Back to Top](#-f1-pit-stop-strategy-simulator)**
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 Made with ❤️ for F1 fans and ML enthusiasts
 
