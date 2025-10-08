@@ -642,6 +642,49 @@ pytest tests/
 
 ---
 
+## 📄 License
 
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
+```bash
+MIT License - Copyright (c) 2025
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
+
+---
+
+## 🏆 Acknowledgments
+
+Built with passion for Formula 1 and powered by:
+
+- **[Streamlit](https://streamlit.io/)** — Rapid data app development framework
+- **[Stable-Baselines3](https://stable-baselines3.readthedocs.io/)** — Production-ready RL implementations
+- **[Gymnasium](https://gymnasium.farama.org/)** — Industry-standard RL environment API
+- **[Plotly](https://plotly.com/python/)** — Interactive visualization library
+- **[Scikit-learn](https://scikit-learn.org/)** — Machine learning fundamentals
+- **[Hugging Face Hub](https://huggingface.co/)** — Model hosting and distribution
+
+### Inspiration
+This project honors the strategic complexity and split-second decisions that define Formula 1 as the pinnacle of motorsport. Every pit stop, tire choice, and weather call can mean the difference between victory and defeat.
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#-f1-pit-stop-strategy-simulator)**
+
+Made with ❤️ for F1 fans and ML enthusiasts
+
+[Report Bug](https://github.com/rembertdesigns/pit-stop-simulator/issues) · [Request Feature](https://github.com/rembertdesigns/pit-stop-simulator/issues) · [Documentation](https://github.com/rembertdesigns/pit-stop-simulator/wiki)
+
+</div>
 
 
