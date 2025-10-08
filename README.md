@@ -174,68 +174,108 @@ obs = [
 ---
 
 ## ✨ Key Features
+<img 
+  width="1584" 
+  height="396" 
+  alt="Key Features - AI-Powered F1 Race Simulation with Q-Learning and PPO Agents, Real-Time Analytics, and Machine Learning Predictions" 
+  title="F1 Pit Stop Simulator Features - Reinforcement Learning Racing Strategy Tool with Advanced Analytics"
+  src="https://github.com/user-attachments/assets/f1da227e-81e6-4007-a92d-c49f72ec078d"
+  loading="lazy"
+/>
 
-### 🤖 AI Strategy Agents
+### 🤖 AI Strategy Agents - Dual Reinforcement Learning System
 
-**Q-Learning Agent**
-- Fast inference (~0.1ms per decision)  
-- Interpretable state-action mappings  
-- Optimal for discrete, well-defined scenarios  
-- 15 agents (5 teams × 3 driver profiles)
+#### Q-Learning Agent - Fast Tabular RL
 
-**PPO Agent**
-- Continuous learning capability  
-- Superior generalization to novel conditions  
-- Neural network-based policy approximation  
-- Single model handles all team/profile combinations
+- **Lightning-fast inference:** ~0.1ms per pit stop decision
+- **Interpretable AI:** Clear state-action mapping for strategy analysis
+- **Specialized agents:** 15 pre-trained models (5 F1 teams × 3 driver profiles)
+- **Optimal use case:** Discrete, well-defined race scenarios
 
-**Performance Comparison**
-- Head-to-Head mode for direct agent comparison  
-- Statistical analysis over 100+ race simulations  
-- Distribution plots for race time and pit stop counts
+#### PPO Agent - Advanced Deep Learning
 
-### Race Simulation Engine
+- **Continuous learning:** Neural network adapts to novel race conditions
+- **Superior generalization:** Handles unseen weather patterns and traffic scenarios
+- **Universal model:** Single agent adapts to all team/driver combinations
+- **State-of-the-art:** Proximal Policy Optimization (Stable-Baselines3)
 
-**Session Types**
-1. **Practice:** 3 stints × 3 laps, random tire compounds  
-2. **Qualifying:** 3 flying laps, best time recording  
-3. **Race:** Full distance with strategic pit stops  
-4. **Full Weekend:** Complete P → Q → R progression  
-5. **Statistical Comparison:** Batch simulations (10–100 runs)
+#### Performance Comparison Tools
 
-**Circuit Library:** 9 Pre-Configured Tracks
-| Track       | Pit Time | Wear Rate | Traffic | Base Lap |
-|--------------|-----------|-----------|----------|-----------|
-| Monza        | 28s       | 1.1x      | 3.0s     | 80.0s     |
-| Spa          | 32s       | 1.2x      | 4.0s     | 105.0s    |
-| Monaco       | 25s       | 1.4x      | 7.5s     | 71.0s     |
-| Bahrain      | 30s       | 2.0x      | 5.0s     | 92.0s     |
-| Silverstone  | 29s       | 1.8x      | 4.5s     | 88.0s     |
+- **Head-to-Head mode:** Direct Q-Learning vs PPO agent benchmarking
+- **Statistical rigor:** Analysis over 100+ race simulations per strategy
+- **Visual analytics:** Distribution plots for race times and pit stop frequency
 
-### 📊 Analytics Dashboard
-**Real-Time Visualizations** (Plotly-powered)
-- Animated lap-by-lap metrics with **0.001–0.5s replay speed**  
-- Tire wear progression with **rolling average smoothing**  
-- **Traffic intensity heatmaps**  
-- **Fuel consumption curves**
+### 🏁 Race Simulation Engine - Complete F1 Weekend Experience
 
-**Post-Race Analysis**
-- **Lap time delta charts** (vs. first valid lap baseline)  
-- **Strategic event timeline** with emoji markers (🅿️ 🌧️ ⚠️ 🚦)  
-- **Tire compound usage distribution**  
-- **Track temperature and grip factor evolution**
+#### Session Types - Full Motorsport Simulation
 
-**ML Insights**
-- **RandomForest lap time predictions** vs. actual performance  
-- **Feature importance rankings**  
-- **Prediction error analysis** (RMSE, R²)
+1. **Practice Session:** 3 stints × 3 laps with randomized tire compound testing
+2. **Qualifying Session:** 3 flying laps, best-time recording (Q1/Q2/Q3 format)
+3. **Race Session:** Full distance (20-80 laps) with strategic pit stop windows
+4. **Full Weekend Mode:** Complete Practice → Qualifying → Race progression
+5. **Statistical Comparison:** Batch simulations (10-100 runs) for strategy validation
 
-### 🧠 Machine Learning Pipeline
-**Lap Time Predictor**
-- **Model:** `RandomForestRegressor (150 trees)`  
-- **Features:** 14 inputs (7 numeric + 5 tire compound dummies + 2 boolean)  
-- **Training data:** Aggregated from simulation logs  
-- **Typical performance:** R² > 0.85, RMSE < 2.0s
+#### Circuit Library - 9 Authentic F1 Tracks
+
+Realistic track characteristics with accurate pit times and tire wear rates:
+
+| Track | Pit Loss | Tire Wear | Traffic Penalty | Base Lap Time |
+|-------|----------|-----------|-----------------|---------------|
+| **Monza** (Italy) | 28s | 1.1× | 3.0s | 80.0s |
+| **Spa-Francorchamps** (Belgium) | 32s | 1.2× | 4.0s | 105.0s |
+| **Monaco** (Monte Carlo) | 25s | 1.4× | 7.5s | 71.0s |
+| **Bahrain** (Sakhir) | 30s | 2.0× | 5.0s | 92.0s |
+| **Silverstone** (UK) | 29s | 1.8× | 4.5s | 88.0s |
+
+*Additional tracks: Austin (COTA), Suzuka, Singapore, Interlagos*
+
+### 📊 Analytics Dashboard - Professional Race Telemetry
+
+#### Real-Time Visualizations (Plotly Interactive Charts)
+
+- **Animated lap-by-lap metrics:** Adjustable replay speed (0.001-0.5s intervals)
+- **Tire degradation tracking:** Rolling average smoothing for trend analysis
+- **Traffic intensity heatmaps:** Visual representation of congestion patterns
+- **Fuel consumption curves:** Weight-adjusted performance modeling
+
+#### Post-Race Analysis Tools
+
+- **Lap time delta charts:** Performance vs. baseline (first valid lap reference)
+- **Strategic event timeline:** Visual race narrative with emoji markers:
+  - 🅿️ Pit stops
+  - 🌧️ Weather changes
+  - ⚠️ Safety Car deployments
+  - 🚦 VSC periods
+- **Tire compound distribution:** Usage statistics across race distance
+- **Environmental tracking:** Track temperature and grip factor evolution
+
+#### ML Insights - Predictive Analytics
+
+- **RandomForest predictions:** AI-forecasted vs. actual lap times comparison
+- **Feature importance rankings:** Identify key performance drivers
+- **Error analysis:** RMSE and R² model performance metrics
+
+### 🧠 Machine Learning Pipeline - Predictive Lap Time Model
+
+#### Lap Time Predictor Specifications
+
+**Model Architecture:**
+- **Algorithm:** RandomForestRegressor with 150 decision trees
+- **Input features:** 14-dimensional feature vector
+  - 7 numeric features (tire wear, fuel load, traffic, etc.)
+  - 5 tire compound dummies (one-hot encoded)
+  - 2 boolean flags (weather, safety car status)
+
+**Training Configuration:**
+- **Data source:** Aggregated simulation logs from race history
+- **Performance benchmarks:**
+  - R² Score: >0.85 (85%+ variance explained)
+  - RMSE: <2.0 seconds (prediction accuracy)
+
+**Use Cases:**
+- Pre-race strategy optimization
+- In-race lap time forecasting
+- Post-race performance analysis
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
