@@ -454,15 +454,23 @@ After successful installation:
 ---
 
 ## 🎓 Model Training Pipeline
+<img 
+  width="1584" 
+  height="396" 
+  alt="Model Training Pipeline - Complete Guide for Training Q-Learning and PPO Agents for F1 Pit Stop Strategy Optimization with Python Machine Learning" 
+  title="F1 AI Training Guide - Step-by-Step Reinforcement Learning Model Training for Racing Strategy"
+  src="https://github.com/user-attachments/assets/f8e91800-7946-4a96-9a32-b373d3dfd115"
+  loading="lazy"
+/>
 
 ### ⚠️ Important Notice
 Pre-trained models are **not included** in the repository. You must train them yourself using the provided scripts.
 
-### Training Workflow
+### Training Workflow - 4-Step ML Pipeline
 ```bash
 1. Generate Data → 2. Train ML Predictor → 3. Train Q-Agents → 4. Train PPO Agent
 ```
-### Step 1: Generate Initial Data
+#### Step 1: Generate Initial Data
 
 Run 2-3 race simulations to create training data:
 ```bash
@@ -474,7 +482,7 @@ streamlit run streamlit_app.py
 - Run simulations with varied conditions (rain, SC, different tracks)
 - Verify `logs/gym_race_lap_data.csv` contains data (should have 100+ rows)
 
-### Step 2: Train Lap Time Predictor
+#### Step 2: Train Lap Time Predictor
 ```bash
 python train_lap_model.py
 ```
@@ -497,7 +505,7 @@ Model training complete.
 
 ✅ Model retrained and saved to: models/lap_time_predictor.pkl
 ```
-### Step 3: Train Q-Learning Agents
+#### Step 3: Train Q-Learning Agents
 ```
 python main.py
 ```
@@ -520,7 +528,7 @@ Training Ferrari Aggressive: 100%|████████| 2000/2000 [05:42<00:
 --- Training for Ferrari - Aggressive complete ---
 ✅ Agent successfully saved to: saved_agents/Ferrari_Aggressive_q.pkl
 ```
-### Step 4: Train PPO Agent
+#### Step 4: Train PPO Agent
 ```bash
 python train_ppo.py
 ```
