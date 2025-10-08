@@ -282,23 +282,69 @@ Realistic track characteristics with accurate pit times and tire wear rates:
 ---
 
 ## 🛠️ Technical Architecture
+<img 
+  width="1584" 
+  height="396" 
+  alt="Technical Architecture - F1 Pit Stop Simulator Technology Stack with Python, Streamlit, PyTorch, and Stable-Baselines3 for AI Racing Strategy" 
+  title="F1 Simulator Tech Stack - Reinforcement Learning Architecture with Deep Learning and Data Science Libraries"
+  src="https://github.com/user-attachments/assets/069e75d9-7424-4448-9ddf-98865422614d"
+  loading="lazy"
+/>
 
-### Technology Stack
-<img width="421" height="433" alt="Screenshot 2025-10-06 at 2 39 09 PM" src="https://github.com/user-attachments/assets/24571e4c-2d1b-4934-bcfc-1597e2fb8fa6" />
+### Technology Stack - Production-Grade AI Racing Platform
+<img 
+  width="421" 
+  height="433" 
+  alt="F1 Pit Stop Simulator Technology Stack Diagram showing Python ecosystem with Streamlit web framework, Gymnasium RL environment, Stable-Baselines3 PPO agents, PyTorch neural networks, Scikit-learn ML models, and Plotly data visualization" 
+  title="Technology Stack Architecture - Python AI Racing Simulator Components"
+  src="https://github.com/user-attachments/assets/24571e4c-2d1b-4934-bcfc-1597e2fb8fa6"
+  loading="lazy"
+/>
 
-### Core Dependencies
+### Core Dependencies - Enterprise Python Stack
 
-| Package           | Version | Purpose                        |
-|--------------------|----------|--------------------------------|
-| **Python**         | 3.10+    | Base runtime                   |
-| **Streamlit**      | 1.28+    | Web application framework      |
-| **Gymnasium**      | 0.29+    | RL environment standard        |
-| **Stable-Baselines3** | 2.1+ | PPO implementation             |
-| **PyTorch**        | 2.0+     | Deep learning backend          |
-| **Scikit-learn**   | 1.3+     | ML predictor model             |
-| **Plotly**         | 5.17+    | Interactive visualizations     |
-| **NumPy**          | 1.24+    | Numerical computing            |
-| **Pandas**         | 2.0+     | Data manipulation              |
+**Foundation & Framework Layer**
+
+| Package | Version | Purpose | Key Features |
+|---------|---------|---------|--------------|
+| **Python** | 3.10+ | Base runtime environment | Type hints, pattern matching, async support |
+| **Streamlit** | 1.28+ | Interactive web application framework | Real-time data visualization, responsive UI |
+
+**Reinforcement Learning Infrastructure**
+
+| Package | Version | Purpose | Key Features |
+|---------|---------|---------|--------------|
+| **Gymnasium** | 0.29+ | OpenAI Gym successor for RL environments | Standardized API, action/observation spaces |
+| **Stable-Baselines3** | 2.1+ | State-of-the-art RL algorithms | PPO, DQN, SAC implementations |
+| **PyTorch** | 2.0+ | Deep learning backend | GPU acceleration, automatic differentiation |
+
+**Machine Learning & Analytics**
+
+| Package | Version | Purpose | Key Features |
+|---------|---------|---------|--------------|
+| **Scikit-learn** | 1.3+ | Classical ML algorithms | RandomForest, preprocessing pipelines |
+| **Plotly** | 5.17+ | Interactive data visualization | Animated charts, 3D plots, responsive design |
+| **NumPy** | 1.24+ | Numerical computing library | Array operations, linear algebra, statistics |
+| **Pandas** | 2.0+ | Data manipulation and analysis | DataFrame operations, CSV handling, time series |
+
+### Architecture Highlights
+
+**🚀 Performance Optimizations:**
+- PyTorch GPU acceleration for neural network training
+- Vectorized NumPy operations for simulation speed
+- Streamlit caching for responsive user experience
+
+**🔧 Development Stack:**
+- Python 3.10+ for modern language features
+- Type hints for code quality and IDE support
+- Modular architecture for easy testing and maintenance
+
+**📊 Data Pipeline:**
+1. **Simulation Engine** → Gymnasium environment
+2. **RL Training** → Stable-Baselines3 PPO/Q-Learning
+3. **ML Prediction** → Scikit-learn RandomForest
+4. **Visualization** → Plotly interactive charts
+5. **Web Interface** → Streamlit dashboard
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
