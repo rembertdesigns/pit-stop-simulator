@@ -32,6 +32,14 @@ An advanced, interactive Formula 1 pit stop strategy simulator leveraging **Rein
 ---
 
 ## 🎯 Overview
+<img 
+  width="1584" 
+  height="396" 
+  alt="F1 Pit Stop Strategy Simulator Overview - AI-powered Formula 1 race strategy optimization with reinforcement learning for tire management and pit timing" 
+  title="F1 Race Strategy Simulator - Machine Learning Pit Stop Optimization Tool"
+  src="https://github.com/user-attachments/assets/6db0dd80-5352-425c-8d94-489ff2dd5ec4"
+  loading="lazy"
+/>
 
 This simulator creates a high-fidelity F1 race environment where AI agents learn optimal pit stop strategies through reinforcement learning. The system models complex race dynamics including:
 
