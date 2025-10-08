@@ -41,43 +41,58 @@ An advanced, interactive Formula 1 pit stop strategy simulator leveraging **Rein
   loading="lazy"
 />
 
-This simulator creates a high-fidelity F1 race environment where AI agents learn optimal pit stop strategies through reinforcement learning. The system models complex race dynamics including:
+This **AI-powered F1 pit stop simulator** creates a high-fidelity Formula 1 race environment where **reinforcement learning agents** optimize pit stop timing and tire strategy decisions. The system models realistic race dynamics using **machine learning** to predict optimal compound selection and pit windows.
 
-- **Race Dynamics Simulation**
-  - **Tire Degradation Models:** Non-linear wear patterns with compound-specific coefficients  
-    - Soft: High grip, rapid degradation (1.5x base rate)
-    - Medium: Balanced performance (1.0x base rate)
-    - Hard: Durability focus (0.7x base rate)
-    - Intermediate/Wet: Weather-dependent characteristics
+### 🏎️ Race Dynamics Simulation
 
-- **Environmental Factors**
-  - Dynamic weather system with probabilistic rain forecasts
-  - Track temperature variations (20-50°C range)
-  - Grip factor evolution based on rubber buildup and conditions
+**Tire Degradation Models** - Compound-specific wear algorithms:
+- **Soft Compound:** Maximum grip, aggressive degradation (1.5× base wear rate)
+- **Medium Compound:** Balanced performance and longevity (1.0× base wear rate)  
+- **Hard Compound:** Extended stint capability (0.7× base wear rate)
+- **Wet/Intermediate:** Dynamic performance based on track conditions
 
-- **Race Incidents**
-  - Safety Car (SC) deployments with configurable duration
-  - Virtual Safety Car (VSC) periods
-  - Strategic opportunity windows during caution periods
+### 🌦️ Environmental Simulation
 
-- **Performance Variables**
-  - Traffic modeling with time penalties (1-10s per lap)
-  - Fuel consumption effects on lap times (~0.03s per kg)
-  - FIA regulation compliance (mandatory compound usage)
+**Weather & Track Conditions:**
+- Probabilistic rain forecast system with intensity modeling
+- Track temperature simulation (20-50°C operational range)
+- Dynamic grip evolution (rubber buildup, track cleaning effects)
+
+### ⚠️ Race Incident Modeling
+
+**Safety Protocols:**
+- **Safety Car (SC)** deployments with configurable duration
+- **Virtual Safety Car (VSC)** period simulation
+- Strategic pit window optimization during caution phases
+
+### 📊 Performance Variables
+
+**Realistic Race Physics:**
+- Traffic simulation with time penalties (1-10 seconds per lap)
+- Fuel load effects on lap times (~0.03s per kilogram)
+- FIA technical regulation compliance (mandatory tire compound rules)
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
   ---
 
 ## 🧠 Core Innovation
+<img 
+  width="1584" 
+  height="396" 
+  alt="Core Innovation - Dual-Agent Reinforcement Learning Architecture for F1 Pit Stop Strategy Optimization using Q-Learning and PPO algorithms" 
+  title="AI Racing Strategy - Q-Learning vs PPO Agent Comparison for Formula 1 Pit Stop Optimization"
+  src="https://github.com/user-attachments/assets/2ef46d01-cd65-4bc9-ae1b-db946d70cc77"
+  loading="lazy"
+/>
 
 ### Dual-Agent Architecture
 
-The project implements two complementary reinforcement learning approaches:
+This **F1 strategy simulator** implements two complementary **AI racing agents** using cutting-edge **reinforcement learning algorithms** for optimal pit stop decision-making.
 
-1. **Q-Learning Agent**
-   - **Algorithm:** Tabular Q-Learning with discretized state space
-   - **State Space Discretization:**
+### 1️⃣ Q-Learning Agent - Tabular Reinforcement Learning
+
+#### State Space Representation (6-Dimensional Discretization)
 ```python
 State = (
     lap_bucket,           # 0-3 (race phase)
@@ -88,20 +103,29 @@ State = (
     vsc_status           # 0-1 (binary)
 )
 ```
-**Action Space:** 6 discrete actions
+#### Action Space - 6 Discrete Pit Stop Strategies
 
-- **Action 0:** Stay out (no pit)
-- **Actions 1-5:** Pit for specific compound (Soft / Medium / Hard / Intermediate / Wet)
+- **Action 0:** Continue racing (no pit stop)
+- **Actions 1-5:** Execute pit stop with tire selection:
+  - Soft compound (maximum grip)
+  - Medium compound (balanced)
+  - Hard compound (durability)
+  - Intermediate (light rain)
+  - Wet (heavy rain)
 
-**Learning Parameters:**
+#### Q-Learning Hyperparameters
 
-- **Learning rate (α):** 0.1
-- **Discount factor (γ):** 0.99
-- **Epsilon-greedy exploration:** ε = 1.0 → 0.01 (decay over 2000 episodes)
+| Parameter | Value | Purpose |
+|-----------|-------|---------|
+| **Learning Rate (α)** | 0.1 | Q-value update step size |
+| **Discount Factor (γ)** | 0.99 | Future reward importance |
+| **Exploration Rate (ε)** | 1.0 → 0.01 | Decay over 2000 episodes |
 
-2. **PPO Agent (Proximal Policy Optimization)**
-  - Framework: Stable-Baselines3 implementation
-  - Observation Space: 7-dimensional continuous vector
+### 2️⃣ PPO Agent - Deep Reinforcement Learning
+
+**Framework:** Stable-Baselines3 Proximal Policy Optimization (PyTorch backend)
+
+#### Continuous Observation Space (7 Features)
 ```python
 obs = [
     current_lap / total_laps,        # Normalized race progress
@@ -113,19 +137,37 @@ obs = [
     vsc_active                       # Binary flag
 ]
 ```
-**Network Architecture**
+#### Neural Network Architecture
 
-- Policy Network: MLP with 2 hidden layers (64 neurons each)
-- Value Network: Shared feature extraction  
-- Activation: Tanh
+**Policy Network (Actor):**
+- Multi-Layer Perceptron (MLP)
+- 2 hidden layers × 64 neurons
+- Tanh activation function
+- Outputs: Probability distribution over 6 actions
 
-**Training Hyperparameters**
+**Value Network (Critic):**
+- Shared feature extraction with policy network
+- Estimates state value function V(s)
 
-- Total timesteps: 300,000  
-- Batch size: 64  
-- Learning rate: 2.5e-4  
-- GAE λ: 0.95  
-- Clip range: 0.2
+#### PPO Training Configuration
+
+| Hyperparameter | Value | Description |
+|----------------|-------|-------------|
+| **Total Timesteps** | 300,000 | Training iterations |
+| **Batch Size** | 64 | Samples per gradient update |
+| **Learning Rate** | 2.5e-4 | Adam optimizer step size |
+| **GAE Lambda (λ)** | 0.95 | Advantage estimation decay |
+| **Clip Range** | 0.2 | Policy update constraint (PPO) |
+
+### 🆚 Agent Comparison
+
+| Feature | Q-Learning | PPO |
+|---------|------------|-----|
+| **State Space** | Discrete (6D buckets) | Continuous (7D vector) |
+| **Policy Type** | Tabular lookup | Neural network |
+| **Training Speed** | Fast (minutes) | Moderate (hours) |
+| **Generalization** | Limited to seen states | Excellent extrapolation |
+| **Best For** | Well-defined scenarios | Complex, variable conditions |
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
