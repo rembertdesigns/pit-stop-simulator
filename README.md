@@ -643,71 +643,167 @@ Experience P → Q → R progression:
 ---
 
 ## 📁 Project Structure
+<img 
+  width="1584" 
+  height="396" 
+  alt="Project Structure - Complete F1 Pit Stop Simulator Codebase Architecture with Python Scripts, Machine Learning Models, and Training Pipelines" 
+  title="F1 Simulator File Structure - Organized Python Project for Reinforcement Learning Racing Strategy"
+  src="https://github.com/user-attachments/assets/c49d7065-0774-4c34-96cb-4ee6c8ae1bb3"
+  loading="lazy"
+/>
+
+### Repository Organization - Modular Python Architecture
 ```bash
 pit-stop-simulator/
 │
 ├── streamlit_app.py              # 🖥️  Main web application (3500+ lines)
-│   ├── Model downloader (Hugging Face Hub)
-│   ├── Simulation orchestration
-│   ├── Plotly visualizations
-│   └── PDF report generation
+│   ├── Model downloader (Hugging Face Hub integration)
+│   ├── Simulation orchestration engine
+│   ├── Plotly interactive visualizations
+│   └── PDF race report generation
 │
 ├── env/
 │   └── gym_race_env.py           # 🏁 Gymnasium-compliant F1 environment
-│       ├── State space definition
-│       ├── Reward function (lap time + penalties)
-│       ├── Weather/SC/VSC logic
-│       └── Tire/fuel degradation models
+│       ├── State space definition (7D observation vector)
+│       ├── Reward function (lap time optimization + penalties)
+│       ├── Weather/Safety Car/VSC simulation logic
+│       └── Tire degradation & fuel consumption models
 │
 ├── rl/
 │   └── q_learning_agent.py       # 🧠 Tabular Q-Learning implementation
-│       ├── State discretization (6D → buckets)
-│       ├── Epsilon-greedy exploration
-│       └── Q-table updates (Bellman equation)
+│       ├── State discretization (6D continuous → discrete buckets)
+│       ├── Epsilon-greedy exploration strategy
+│       └── Q-table updates (Bellman equation solver)
 │
 ├── train_ppo.py                  # 🚂 PPO agent training script
-│   ├── Vectorized environment setup
-│   ├── Hyperparameter configuration
-│   ├── Checkpoint/eval callbacks
-│   └── TensorBoard logging
+│   ├── Vectorized environment setup (parallel simulation)
+│   ├── Hyperparameter configuration (learning rate, batch size)
+│   ├── Checkpoint/evaluation callbacks (auto-save best model)
+│   └── TensorBoard logging integration
 │
-├── train_lap_model.py            # 📈 ML lap time predictor training
-│   ├── CSV data loading/preprocessing
-│   ├── RandomForest training
-│   ├── Feature engineering (one-hot encoding)
-│   └── Model evaluation (RMSE, R²)
+├── train_lap_model.py            # 📈 Machine learning lap time predictor
+│   ├── CSV data loading & preprocessing pipeline
+│   ├── RandomForest regressor training (150 trees)
+│   ├── Feature engineering (one-hot encoding, normalization)
+│   └── Model evaluation metrics (RMSE, R², feature importance)
 │
 ├── main.py                       # 🎯 Batch Q-Learning agent training
-│   ├── Multi-agent training loop (15 agents)
-│   ├── Progress tracking (tqdm)
-│   ├── Training visualization (rewards, heatmaps)
-│   └── Agent persistence (pickle)
+│   ├── Multi-agent training loop (15 agents: 5 teams × 3 profiles)
+│   ├── Progress tracking with tqdm library
+│   ├── Training visualization (reward curves, Q-value heatmaps)
+│   └── Agent persistence using pickle serialization
 │
 ├── ppo_eval.py                   # 📊 PPO agent evaluation script
-│   ├── Deterministic policy rollouts
-│   ├── Detailed lap-by-lap logging
-│   └── Episode statistics
+│   ├── Deterministic policy rollouts (no exploration)
+│   ├── Detailed lap-by-lap performance logging
+│   └── Episode statistics aggregation (mean, std, min, max)
 │
-├── models/                       # 🤖 Trained models (auto-downloaded from HF Hub)
-│   ├── ppo_pit_stop.zip          # PPO neural network policy
-│   └── lap_time_predictor.pkl    # RandomForest regressor
+├── models/                       # 🤖 Trained ML models (auto-downloaded)
+│   ├── ppo_pit_stop.zip          # PPO neural network policy (PyTorch)
+│   └── lap_time_predictor.pkl    # RandomForest regressor (Scikit-learn)
 │
-├── saved_agents/                 # 💾 Q-Learning agents (15 .pkl files)
+├── saved_agents/                 # 💾 Q-Learning agent collection
 │   ├── Ferrari_Aggressive_q.pkl
 │   ├── Mercedes_Balanced_q.pkl
-│   └── ... (13 more combinations)
+│   ├── Red_Bull_Conservative_q.pkl
+│   └── ... (15 total .pkl files for all team/profile combinations)
 │
-├── logs/                         # 📝 Simulation data (auto-generated)
-│   └── gym_race_lap_data.csv     # Lap-by-lap race logs
+├── logs/                         # 📝 Simulation output data (auto-generated)
+│   └── gym_race_lap_data.csv     # Lap-by-lap race telemetry logs
 │
 ├── training_figures/             # 📊 Training visualizations (auto-generated)
-│   ├── rewards_{Team}_{Profile}.png
-│   └── heatmap_{Team}_{Profile}.png
+│   ├── rewards_{Team}_{Profile}.png      # Episode reward curves
+│   └── heatmap_{Team}_{Profile}.png      # Q-value state-action heatmaps
 │
-├── requirements.txt              # 📦 Python dependencies
-├── README.md                     # 📚 This documentation
-└── LICENSE                       # ⚖️  MIT License
+├── requirements.txt              # 📦 Python package dependencies
+├── README.md                     # 📚 Complete project documentation
+└── LICENSE                       # ⚖️  MIT open-source license
 ```
+
+### Key Directory Descriptions
+
+#### Core Application Files
+
+**`streamlit_app.py`** - Primary user interface (3500+ lines)
+- Web dashboard powered by Streamlit framework
+- Automatic model downloading from Hugging Face Hub
+- Real-time race simulation with Plotly animations
+- PDF export functionality for race reports
+
+**`env/gym_race_env.py`** - Reinforcement learning environment
+- OpenAI Gymnasium API compliance
+- F1-specific state space (tire wear, fuel, weather, traffic)
+- Reward shaping for optimal pit stop timing
+- Physics-based tire degradation and fuel consumption
+
+**`rl/q_learning_agent.py`** - Q-Learning agent implementation
+- Tabular RL algorithm with discrete state space
+- Epsilon-greedy exploration-exploitation balance
+- Bellman equation for Q-value updates
+
+#### Training Scripts
+
+**`train_ppo.py`** - Deep reinforcement learning training
+- Proximal Policy Optimization (Stable-Baselines3)
+- 300,000 training timesteps (~2-3 hours CPU)
+- Automatic checkpoint saving and model evaluation
+- TensorBoard integration for training visualization
+
+**`train_lap_model.py`** - Supervised learning for lap time prediction
+- RandomForest regression with 150 decision trees
+- 14-dimensional feature engineering pipeline
+- Model evaluation: RMSE < 2.0s, R² > 0.85
+
+**`main.py`** - Batch Q-Learning training orchestrator
+- Trains 15 specialized agents (5 teams × 3 driver profiles)
+- Progress tracking with tqdm progress bars
+- Generates reward curves and Q-value heatmaps
+- Saves trained agents to `saved_agents/` directory
+
+**`ppo_eval.py`** - Agent performance evaluation
+- Tests PPO agent on validation episodes
+- Deterministic policy (no random exploration)
+- Exports detailed statistics for analysis
+
+#### Data & Model Directories
+
+**`models/`** - Machine learning model storage
+- **Auto-downloaded** from Hugging Face Hub on first run
+- `ppo_pit_stop.zip`: PPO neural network (PyTorch SavedModel)
+- `lap_time_predictor.pkl`: RandomForest regressor (Scikit-learn pickle)
+
+**`saved_agents/`** - Q-Learning agent repository
+- 15 pre-trained agents covering all team/profile combinations
+- Each `.pkl` file contains Q-table and hyperparameters
+- Examples: `Ferrari_Aggressive_q.pkl`, `McLaren_Balanced_q.pkl`
+
+**`logs/`** - Simulation telemetry data
+- `gym_race_lap_data.csv`: Training data for ML lap time predictor
+- Generated automatically during race simulations
+- Contains: lap number, tire wear, fuel weight, traffic, lap time, etc.
+
+**`training_figures/`** - Training visualization outputs
+- Reward curve plots for each Q-Learning agent
+- Q-value heatmaps showing optimal state-action pairs
+- Auto-generated during `main.py` execution
+
+### File Organization Benefits
+
+**🎯 Modularity:**
+- Clear separation between environment, agents, and training
+- Easy to modify individual components without affecting others
+
+**🔧 Maintainability:**
+- Self-documenting file names and directory structure
+- Comprehensive inline comments and docstrings
+
+**📦 Scalability:**
+- Easy to add new agents or training scripts
+- Extensible architecture for future features
+
+**🚀 Developer Experience:**
+- Quick navigation to specific functionality
+- Standard Python project layout conventions
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
