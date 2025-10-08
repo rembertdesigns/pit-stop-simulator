@@ -1117,6 +1117,14 @@ The simulator provides real-time performance tracking:
 ---
 
 ## 🛣️ Roadmap
+<img 
+  width="1584" 
+  height="396" 
+  alt="Roadmap - Future Development Plans for F1 Pit Stop Simulator including Multi-Agent Racing, Advanced AI Strategy, Deep Learning Models, and Championship Mode" 
+  title="F1 Simulator Roadmap - Planned Features for 2025-2026 with Multi-Car Simulation and Advanced Machine Learning"
+  src="https://github.com/user-attachments/assets/8ba24017-d69b-46ae-a185-a92b9bd24734"
+  loading="lazy"
+/>
 
 ### Phase 1: Multi-Agent Racing (Q3 2025)
 - [ ] Implement 20-car grid simulation
