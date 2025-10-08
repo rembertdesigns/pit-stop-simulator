@@ -1161,6 +1161,14 @@ The simulator provides real-time performance tracking:
 ---
 
 ## 🔗 External Resources
+<img 
+  width="1584" 
+  height="396" 
+  alt="External Resources - Hugging Face Model Repository, Stable-Baselines3 Documentation, Gymnasium API Reference, and Streamlit Component Library for F1 Pit Stop Simulator" 
+  title="F1 Simulator External Resources - Pre-Trained Models and Official Documentation Links"
+  src="https://github.com/user-attachments/assets/c5c60a2c-245b-47fe-a47d-02b8625243f5"
+  loading="lazy"
+/>
 
 ### Model Repository
 All trained models hosted on [Hugging Face Hub](https://huggingface.co/Richard1224/pit-stop-simulator-models)
