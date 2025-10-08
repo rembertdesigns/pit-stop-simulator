@@ -1189,6 +1189,14 @@ huggingface-cli download Richard1224/pit-stop-simulator-models --local-dir ./
 ---
 
 ## 🙌 Contributing
+<img 
+  width="1584" 
+  height="396" 
+  alt="Contributing to F1 Pit Stop Simulator - Open Source Project Accepting Contributions for Multi-Agent Racing, Deep Learning, and F1 Strategy Features" 
+  title="Contribute to F1 Simulator - Help Build Advanced Reinforcement Learning Racing Strategy Tool"
+  src="https://github.com/user-attachments/assets/6a6ff10a-5a4e-4dfb-8e7b-ee98c90f3493"
+  loading="lazy"
+/>
 
 Contributions welcome! Priority areas:
 
@@ -1226,6 +1234,14 @@ pytest tests/
 ---
 
 ## 📄 License
+<img 
+  width="1584" 
+  height="396" 
+  alt="License Information - F1 Pit Stop Simulator Released Under MIT Open Source License for Free Commercial and Personal Use" 
+  title="MIT License - Free Open Source F1 Racing Strategy Simulator for Educational and Commercial Projects"
+  src="https://github.com/user-attachments/assets/0f4e6efb-6291-47be-a50c-435f8e77d249"
+  loading="lazy"
+/>
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
 ```bash
