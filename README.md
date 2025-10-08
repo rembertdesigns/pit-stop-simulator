@@ -351,38 +351,103 @@ Realistic track characteristics with accurate pit times and tire wear rates:
 ---
 
 ## 🚀 Installation
+<img 
+  width="1584" 
+  height="396" 
+  alt="Installation Guide - Step-by-Step Setup for F1 Pit Stop Simulator with Python 3.10+, Git, and Machine Learning Dependencies" 
+  title="F1 Simulator Installation - Quick Setup Guide for Reinforcement Learning Racing Strategy Tool"
+  src="https://github.com/user-attachments/assets/e16bd88f-f5cb-493a-8692-6f6b3904f90f"
+  loading="lazy"
+/>
 
-### Prerequisites
-- Python 3.10 or newer  
-- Git  
-- ~2GB disk space for models and dependencies  
-- 4GB+ RAM recommended for PPO training  
+### Prerequisites - System Requirements
 
-### Quick Setup
-1. **Clone Repository**
+Before installing the F1 Pit Stop Simulator, ensure your system meets these requirements:
+
+**Software Requirements:**
+- **Python 3.10 or newer** (3.11+ recommended for performance)
+- **Git** version control system
+- **pip** package manager (included with Python)
+
+**Hardware Requirements:**
+- **Storage:** ~2GB disk space (models + dependencies)
+- **RAM:** 4GB+ recommended for PPO training (8GB+ optimal)
+- **GPU:** Optional (CUDA-compatible for faster training)
+
+### Quick Setup - 5-Minute Installation
+
+#### Step 1: Clone Repository from GitHub
+
+Download the F1 simulator source code:
 ```bash
 git clone https://github.com/rembertdesigns/pit-stop-simulator.git
 cd pit-stop-simulator
 ```
-2. **Create Virtual Environment** (Recommended)
+**Alternative:** Download ZIP from [GitHub releases](https://github.com/rembertdesigns/pit-stop-simulator/releases)
+
+#### Step 2: Create Virtual Environment (Recommended)
+
+Isolate project dependencies using Python's venv:
+
+**macOS / Linux:**
 ```bash
-# macOS/Linux
 python3 -m venv venv
 source venv/bin/activate
-
-# Windows
+```
+**Windows:**
+```bash
 python -m venv venv
 venv\Scripts\activate
 ```
-3. **Install Dependencies**
+**Why virtual environments?** Prevents dependency conflicts and ensures reproducibility.
+
+#### Step 3: Install Python Dependencies
+
+Install all required packages via pip:
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-4. **Verify Installation**
+**What gets installed:**
+
+- Streamlit (web framework)
+- Stable-Baselines3 (RL algorithms)
+- PyTorch (deep learning)
+- Gymnasium (RL environments)
+- Plotly, NumPy, Pandas (analytics)
+
+**Installation time:** ~2-5 minutes depending on internet speed
+
+#### Step 4: Verify Installation
+
+Test that all critical dependencies are installed correctly:
 ```bash
 python -c "import streamlit; import gymnasium; import stable_baselines3; print('✅ All dependencies installed')"
 ```
+**Expected output:**
+```bash
+✅ All dependencies installed
+```
+### Next Steps
+
+After successful installation:
+
+1. **Launch the simulator:** `streamlit run streamlit_app.py`
+2. **Train models:** Follow the [Model Training Pipeline](#-model-training-pipeline) guide
+3. **Run your first race:** See the [Usage Guide](#-usage-guide)
+
+### Troubleshooting Common Issues
+
+**Issue:** `ModuleNotFoundError: No module named 'torch'`  
+**Solution:** Reinstall PyTorch: `pip install torch --upgrade`
+
+**Issue:** Installation fails on Windows  
+**Solution:** Install Microsoft Visual C++ Build Tools
+
+**Issue:** Out of memory during training  
+**Solution:** Reduce batch size in `train_ppo.py` or use Q-Learning agents
+
+**Need help?** [Open an issue on GitHub](https://github.com/rembertdesigns/pit-stop-simulator/issues)
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
