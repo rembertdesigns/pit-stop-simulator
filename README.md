@@ -57,6 +57,8 @@ This simulator creates a high-fidelity F1 race environment where AI agents learn
   - Fuel consumption effects on lap times (~0.03s per kg)
   - FIA regulation compliance (mandatory compound usage)
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
   ---
 
 ## 🧠 Core Innovation
@@ -116,6 +118,8 @@ obs = [
 - Learning rate: 2.5e-4  
 - GAE λ: 0.95  
 - Clip range: 0.2
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
@@ -183,6 +187,8 @@ obs = [
 - **Training data:** Aggregated from simulation logs  
 - **Typical performance:** R² > 0.85, RMSE < 2.0s
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 🛠️ Technical Architecture
@@ -203,6 +209,8 @@ obs = [
 | **Plotly**         | 5.17+    | Interactive visualizations     |
 | **NumPy**          | 1.24+    | Numerical computing            |
 | **Pandas**         | 2.0+     | Data manipulation              |
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
@@ -239,6 +247,9 @@ pip install -r requirements.txt
 ```bash
 python -c "import streamlit; import gymnasium; import stable_baselines3; print('✅ All dependencies installed')"
 ```
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 🎓 Model Training Pipeline
@@ -349,6 +360,8 @@ ls -lh saved_agents/
 # Should show 15 .pkl files for Q-agents
 ```
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 📖 Usage Guide
@@ -407,6 +420,8 @@ Experience P → Q → R progression:
 - Session Type: "Full Weekend"
 - Simulates Practice (9 laps), Qualifying (3 laps), Race (full distance)
 - Carries strategic insights between sessions
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
@@ -477,6 +492,8 @@ pit-stop-simulator/
 └── LICENSE                       # ⚖️  MIT License
 ```
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## ⚙️ Configuration
@@ -520,6 +537,8 @@ rain_forecast_ranges = [
 - Grip reduction: -30% to -60%
 - Forces Intermediate/Wet tire compound
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 📊 Performance Metrics
@@ -552,6 +571,8 @@ Pit Efficiency = 100 × (1 - (pit_stops × pit_time) / total_race_time)
 - RMSE: 1.5-2.5 seconds
 - R²: 0.85-0.92
 - Feature Importance: tire_wear (35%), lap (18%), fuel_weight (14%)
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
@@ -587,6 +608,8 @@ Pit Efficiency = 100 × (1 - (pit_stops × pit_time) / total_race_time)
 - [ ] Car development progression
 - [ ] Strategic resource allocation (tire allocation)
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 🔗 External Resources
@@ -604,6 +627,8 @@ huggingface-cli download Richard1224/pit-stop-simulator-models --local-dir ./
 - **Stable-Baselines3**: [RL algorithms documentation](https://stable-baselines3.readthedocs.io/)
 - **Gymnasium**: [Environment API reference](https://gymnasium.farama.org/)
 - **Streamlit**: [Component library](https://docs.streamlit.io/)
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
@@ -640,6 +665,8 @@ pytest tests/
 - Include type hints for function signatures
 - Update README if adding major features
 
+**[⬆ Back to Table of Contents](#-table-of-contents)**
+
 ---
 
 ## 📄 License
@@ -658,6 +685,8 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 ```
+
+**[⬆ Back to Table of Contents](#-table-of-contents)**
 
 ---
 
