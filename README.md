@@ -574,8 +574,16 @@ ls -lh saved_agents/
 ---
 
 ## 📖 Usage Guide
+<img 
+  width="1584" 
+  height="396" 
+  alt="Usage Guide - How to Use F1 Pit Stop Simulator with Q-Learning and PPO AI Agents for Racing Strategy Optimization and Analysis" 
+  title="F1 Simulator User Guide - Complete Tutorial for Running AI-Powered Race Simulations"
+  src="https://github.com/user-attachments/assets/49b5491c-f49d-4c29-a26a-5ddf44c4ad72"
+  loading="lazy"
+/>
 
-## Launch Application
+### Launch Application
 ```bash
 bashstreamlit run streamlit_app.py
 ```
