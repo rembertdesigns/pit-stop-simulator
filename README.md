@@ -810,9 +810,20 @@ pit-stop-simulator/
 ---
 
 ## ⚙️ Configuration
+<img 
+  width="1584" 
+  height="396" 
+  alt="Configuration Settings - F1 Pit Stop Simulator Environment Parameters, Driver Profiles, and Weather System Configuration for Racing Strategy Optimization" 
+  title="F1 Simulator Configuration Guide - Customize Track Parameters, Tire Wear, and Weather Conditions"
+  src="https://github.com/user-attachments/assets/07d9d7ee-6d30-4635-a434-7408bfea8848"
+  loading="lazy"
+/>
 
-### Environment Parameters
-**Track Configuration** (`PitStopEnv` initialization):
+### Environment Parameters - Race Simulation Settings
+
+Customize the F1 racing environment using `PitStopEnv` initialization parameters:
+
+#### Track Configuration Example
 ```python
 env = PitStopEnv(
     total_laps=58,                  # Race distance
@@ -822,33 +833,110 @@ env = PitStopEnv(
     traffic_penalty_config=3.0      # Time lost per traffic unit
 )
 ```
-### Driver Profile Effects
+#### Parameter Descriptions
 
-Profiles modify agent behavior and physics:
+**`total_laps`** - Race Distance
+- Range: 20-80 laps
+- Default: 58 laps (standard Grand Prix)
+- Short races: 20-30 laps for testing
+- Full distance: 50-80 laps for realistic strategy
 
-| Profile | Pit Threshold | Tire Wear Multiplier | Overtake Bonus |
-|---------|---------------|----------------------|----------------|
-| **Aggressive** | 75% wear | 1.15× (faster degradation) | -0.2s (time gain) |
-| **Balanced** | 65% wear | 1.0× (baseline) | 0.0s (neutral) |
-| **Conservative** | 55% wear | 0.85× (slower degradation) | +0.1s (time loss) |
+**`base_lap_time_seconds`** - Ideal Lap Time
+- Represents optimal lap time in dry conditions with fresh tires
+- Varies by track: Monaco (~71s), Spa (~105s), Monza (~80s)
+- Used as baseline for tire degradation and fuel effects
 
-### Weather System
+**`pit_time`** - Pit Stop Duration
+- Total time lost during pit stop (including pit lane transit)
+- Typical F1 range: 20-35 seconds
+- Monaco: ~25s (short pit lane) | Spa: ~32s (long pit lane)
 
-**Rain Forecast Configuration**:
+**`tire_wear_rate_config`** - Track Abrasiveness
+- Multiplier for tire degradation rate
+- Low wear: 0.7-0.9 (smooth tarmac)
+- Medium wear: 1.0-1.3 (standard circuits)
+- High wear: 1.5-2.0 (abrasive surfaces like Bahrain)
+
+**`traffic_penalty_config`** - Overtaking Difficulty
+- Time penalty per traffic unit when following other cars
+- Low traffic: 1-3s (fast circuits like Monza)
+- High traffic: 5-10s (street circuits like Monaco)
+
+### Driver Profile Effects - Racing Style Customization
+
+Driver profiles modify AI agent behavior and tire physics:
+
+#### Profile Comparison Table
+
+| Profile | Pit Threshold | Tire Wear Multiplier | Overtake Bonus | Strategy Style |
+|---------|---------------|----------------------|----------------|----------------|
+| **Aggressive** | 75% wear | 1.15× (faster degradation) | -0.2s (time gain) | Early pits, push hard |
+| **Balanced** | 65% wear | 1.0× (baseline) | 0.0s (neutral) | Standard strategy |
+| **Conservative** | 55% wear | 0.85× (slower degradation) | +0.1s (time loss) | Extended stints, preserve tires |
+
+#### Detailed Profile Mechanics
+
+**Aggressive Profile** - Maximum Attack
+- **Pit Threshold:** 75% tire wear (pushes tires to limit)
+- **Tire Degradation:** 1.15× faster wear (aggressive driving style)
+- **Overtaking:** -0.2s bonus (risk-taking maneuvers)
+- **Best For:** Qualifying-style pace, short stints, undercut strategies
+
+**Balanced Profile** - Standard Approach
+- **Pit Threshold:** 65% tire wear (optimal trade-off)
+- **Tire Degradation:** 1.0× baseline wear (neutral driving)
+- **Overtaking:** 0.0s neutral (standard racecraft)
+- **Best For:** Versatile strategy, adaptable to race conditions
+
+**Conservative Profile** - Tire Management
+- **Pit Threshold:** 55% tire wear (preserves tire life)
+- **Tire Degradation:** 0.85× slower wear (gentle driving style)
+- **Overtaking:** +0.1s penalty (cautious approach)
+- **Best For:** One-stop strategies, high-degradation tracks, overcut tactics
+
+### Weather System - Dynamic Race Conditions
+
+#### Rain Forecast Configuration
+
+Define probabilistic weather windows for realistic race scenarios:
 ```python
 rain_forecast_ranges = [
     {
-        "start": 15,           # Lap window start
-        "end": 25,             # Lap window end
-        "probability": 0.7,    # 70% chance of rain
-        "intensity": 0.6       # Rain strength (0.0-1.0)
+        "start": 15,           # Rain window start lap
+        "end": 25,             # Rain window end lap
+        "probability": 0.7,    # 70% chance of precipitation
+        "intensity": 0.6       # Rain strength: 0.0 (light) to 1.0 (heavy)
     }
 ]
 ```
-**Rain Effects:**
-- Lap time penalty: +5-15s (intensity-dependent)
-- Grip reduction: -30% to -60%
-- Forces Intermediate/Wet tire compound
+#### Multiple Weather Windows Example:
+```python
+rain_forecast_ranges = [
+    {"start": 10, "end": 20, "probability": 0.5, "intensity": 0.3},  # Light rain
+    {"start": 35, "end": 50, "probability": 0.8, "intensity": 0.8}   # Heavy rain
+]
+```
+#### Rain Effects on Race Performance
+
+**Lap Time Penalties:**
+- **Light rain (0.1-0.3):** +5-8 seconds per lap
+- **Medium rain (0.4-0.6):** +8-12 seconds per lap
+- **Heavy rain (0.7-1.0):** +12-15 seconds per lap
+
+**Grip Reduction:**
+- **Dry conditions:** 100% grip (baseline)
+- **Light rain:** 70-80% grip (-20-30% reduction)
+- **Heavy rain:** 40-60% grip (-40-60% reduction)
+
+**Tire Compound Requirements:**
+- **Intensity < 0.4:** Intermediate tires recommended
+- **Intensity ≥ 0.4:** Full wet tires mandatory
+- **FIA Rule:** Must use at least one wet/intermediate compound in wet races
+
+**Strategic Implications:**
+- **Early pit advantage:** Teams can switch to wet tires before rain intensity increases
+- **Track position gamble:** Stay out on slicks or pit early for inters
+- **Safety Car potential:** Heavy rain often triggers Safety Car deployments
 
 **[⬆ Back to Table of Contents](#-table-of-contents)**
 
